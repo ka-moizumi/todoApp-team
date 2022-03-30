@@ -19,3 +19,9 @@
 
 6. frontend サーバー起動
    `npm start`
+
+7. /db ディレクトリへ移動
+   `cd /db`
+
+8. db サーバー起動
+   `docker-compose up -d`
