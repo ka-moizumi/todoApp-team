@@ -16,25 +16,25 @@ export const Create = () => {
   };
 
   return (
-    <SNewTodos>
+    <SWrapper>
       <h1>Todo新規作成</h1>
       <SInputArea>
         <SInput placeholder="Todoを入力" value={text} onChange={onChange} />
         <SInputButton onClick={onClickAdd}>作成</SInputButton>
-        {text == false && <SError>※Todoを入力してください</SError>}
       </SInputArea>
+      {text === "" && <SError>※Todoを入力してください</SError>}
       <STodosArea>
         <STodos>
           {todos.map((todo) => {
-            return <li>{todo}</li>;
+            return <li key={todo}>{todo}</li>;
           })}
         </STodos>
       </STodosArea>
-    </SNewTodos>
+    </SWrapper>
   );
 };
 
-const SNewTodos = styled.div`
+export const SWrapper = styled.div`
   margin: 6px;
 `;
 
@@ -67,7 +67,7 @@ const SError = styled.p`
   color: red;
 `;
 
-const STodosArea = styled.div`
+export const STodosArea = styled.div`
   width: 400px;
   height: auto !important;
   height: 0px;
@@ -78,6 +78,6 @@ const STodosArea = styled.div`
   border-radius: 10px;
 `;
 
-const STodos = styled.ul`
+export const STodos = styled.ul`
   text-align: left;
 `;
