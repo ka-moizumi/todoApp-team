@@ -24,13 +24,17 @@ export const Create = () => {
     setTodos([]);
   };
 
+  const onClickEdit = (index) => {
+    console.log(todos[index]);
+  };
+
   return (
     <SWrapper>
       <h1>Todo新規作成</h1>
       <SInputArea>
         <SInput placeholder="Todoを入力" value={text} onChange={onChange} />
         <SInputButton onClick={onClickAdd}>作成</SInputButton>
-        <SClearButton onClick={onClickClear}>全削除</SClearButton>
+        <SClearButton onClick={onClickClear}>全件削除</SClearButton>
         {text === "" && <SError>※Todoを入力してください</SError>}
       </SInputArea>
       <STodosArea>
@@ -42,6 +46,9 @@ export const Create = () => {
                 <SDeleteButton onClick={() => onClickDelete(index)}>
                   ×
                 </SDeleteButton>
+                <SEditButton onClick={() => onClickEdit(index)}>
+                  編集
+                </SEditButton>
               </STodo>
             );
           })}
@@ -65,7 +72,7 @@ const SInput = styled.input`
   border: 1px solid;
 `;
 
-const SInputButton = styled.button`
+const SBaseButton = styled.button`
   margin-left: 6px;
   padding: 3px 8px;
   border-radius: 8px;
@@ -79,20 +86,17 @@ const SInputButton = styled.button`
   }
 `;
 
-const SClearButton = styled.button`
-  margin-left: 6px;
-  padding: 3px 8px;
-  border-radius: 8px;
-  border: none;
+const SInputButton = styled(SBaseButton)``;
+
+const SClearButton = styled(SBaseButton)`
   color: #e72035;
-  background-color: #ededed;
-  outline: none;
   &:hover {
-    cursor: pointer;
     background-color: #e72035;
     color: #ffffff;
   }
 `;
+
+const SEditButton = styled(SBaseButton)``;
 
 const SError = styled.p`
   margin: 4px 2px;
