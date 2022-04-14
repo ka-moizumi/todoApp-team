@@ -11,17 +11,21 @@ DROP TABLE IF EXISTS TASK;
 
 CREATE TABLE TASK (
   id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  content VARCHAR(50) NOT NULL,
+  title VARCHAR(50) NOT NULL,
+  content VARCHAR(100) NOT NULL,
+  priority TINYINT UNSIGNED NOT NULL DEFAULT 3,
+  completion BOOLEAN NOT NULL DEFAULT false,
+  user_id VARCHAR(10) NOT NULL,
   update_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY  (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 
-INSERT INTO TASK VALUES (1,'HTMLを学習する','2006-02-15 04:34:33'),
-(2,'CSSを学習する','2006-02-15 04:34:33'),
-(3,'javaを学習する','2006-02-15 04:34:33'),
-(4,'Reactを学習する','2006-02-15 04:34:33');
+INSERT INTO TASK VALUES (1,'HTMLを学習する','コーポレートサイトを作成する。',1,false,'aikawa','2006-02-15 04:34:33'),
+(2,'CSSを学習する','ハンバーガーメニューを作成する。',2,true,'aikawa','2006-02-15 04:34:33'),
+(3,'javaを学習する','MVCとは何かを調査する。',2,true,'aikawa','2006-02-15 04:34:33'),
+(4,'Reactを学習する','レンダリングについて確認する。',3,false,'aikawa','2006-02-15 04:34:33');
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
