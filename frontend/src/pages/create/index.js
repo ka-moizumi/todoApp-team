@@ -28,27 +28,23 @@ export const Create = () => {
       todos.splice(index, 1, edit);
     }
     setEditOpen(!editOpen);
-    setEdit("");
   };
 
   const onClickDelete = (index) => {
     todos.splice(index, 1);
     setTodos([...todos]);
-    if (editOpen) {
-      setEditOpen(!editOpen);
-    }
+    if (editOpen) setEditOpen(!editOpen);
   };
 
   const onClickClear = () => {
     setTodos([]);
-    if (editOpen) {
-      setEditOpen(!editOpen);
-    }
+    if (editOpen) setEditOpen(!editOpen);
   };
 
   const onClickEdit = (index) => {
     setEditIndex(index);
     setEditOpen(!editOpen);
+    setEdit("");
   };
 
   const editSwitch = (todo, index) => {
