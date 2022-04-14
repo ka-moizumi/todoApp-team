@@ -4,8 +4,14 @@ import styled from "styled-components";
 export const Create = () => {
   const [text, setText] = useState("");
   const [todos, setTodos] = useState([]);
+  const [edit, setEdit] = useState("");
+
+  const [editOpen, setEditOpen] = useState(false);
+  const [editIndex, setEditIndex] = useState(0);
 
   const onChange = (e) => setText(e.target.value);
+  const onChangeEdit = (e) => setEdit(e.target.value);
+
   const onClickAdd = () => {
     if (text === "") {
       return false;
@@ -15,13 +21,50 @@ export const Create = () => {
     setText("");
   };
 
+  const onClickConfirm = (index) => {
+    if (edit === "") {
+      return setEditOpen(!editOpen);
+    } else {
+      todos.splice(index, 1, edit);
+    }
+    setEditOpen(!editOpen);
+  };
+
   const onClickDelete = (index) => {
     todos.splice(index, 1);
     setTodos([...todos]);
+    if (editOpen) setEditOpen(!editOpen);
   };
 
   const onClickClear = () => {
     setTodos([]);
+    if (editOpen) setEditOpen(!editOpen);
+  };
+
+  const onClickEdit = (index) => {
+    setEditIndex(index);
+    setEditOpen(!editOpen);
+    setEdit("");
+  };
+
+  const editSwitch = (todo, index) => {
+    if (editOpen && editIndex === index) {
+      return (
+        <>
+          <SEditInput placeholder={todo} value={edit} onChange={onChangeEdit} />
+          <SConfirmButton onClick={() => onClickConfirm(index)}>
+            ○
+          </SConfirmButton>
+        </>
+      );
+    } else {
+      return (
+        <>
+          {todo}
+          <SEditButton onClick={() => onClickEdit(index)}>編集</SEditButton>
+        </>
+      );
+    }
   };
 
   return (
@@ -30,7 +73,7 @@ export const Create = () => {
       <SInputArea>
         <SInput placeholder="Todoを入力" value={text} onChange={onChange} />
         <SInputButton onClick={onClickAdd}>作成</SInputButton>
-        <SClearButton onClick={onClickClear}>全削除</SClearButton>
+        <SClearButton onClick={onClickClear}>全件削除</SClearButton>
         {text === "" && <SError>※Todoを入力してください</SError>}
       </SInputArea>
       <STodosArea>
@@ -38,7 +81,7 @@ export const Create = () => {
           {todos.map((todo, index) => {
             return (
               <STodo key={index}>
-                {todo}
+                {editSwitch(todo, index)}
                 <SDeleteButton onClick={() => onClickDelete(index)}>
                   ×
                 </SDeleteButton>
@@ -51,7 +94,7 @@ export const Create = () => {
   );
 };
 
-export const SWrapper = styled.div`
+const SWrapper = styled.div`
   margin: 6px;
 `;
 
@@ -65,7 +108,9 @@ const SInput = styled.input`
   border: 1px solid;
 `;
 
-const SInputButton = styled.button`
+const SEditInput = styled(SInput)``;
+
+const SPrimaryButton = styled.button`
   margin-left: 6px;
   padding: 3px 8px;
   border-radius: 8px;
@@ -79,16 +124,13 @@ const SInputButton = styled.button`
   }
 `;
 
-const SClearButton = styled.button`
-  margin-left: 6px;
-  padding: 3px 8px;
-  border-radius: 8px;
-  border: none;
+const SInputButton = styled(SPrimaryButton)``;
+
+const SEditButton = styled(SPrimaryButton)``;
+
+const SClearButton = styled(SPrimaryButton)`
   color: #e72035;
-  background-color: #ededed;
-  outline: none;
   &:hover {
-    cursor: pointer;
     background-color: #e72035;
     color: #ffffff;
   }
@@ -99,7 +141,7 @@ const SError = styled.p`
   color: #e72035;
 `;
 
-export const STodosArea = styled.div`
+const STodosArea = styled.div`
   width: 400px;
   height: auto !important;
   height: 0px;
@@ -110,16 +152,15 @@ export const STodosArea = styled.div`
   border-radius: 10px;
 `;
 
-export const STodos = styled.ul`
+const STodos = styled.ul`
   text-align: left;
 `;
 
-export const STodo = styled.li`
+const STodo = styled.li`
   margin-top: 8px;
 `;
 
-export const SDeleteButton = styled.button`
-  color: #e72035;
+const SSecondaryButton = styled.button`
   padding: 4px 8px;
   margin-left: 12px;
   border-radius: 100px;
@@ -127,7 +168,21 @@ export const SDeleteButton = styled.button`
   outline: none;
   &:hover {
     cursor: pointer;
+  }
+`;
+
+const SDeleteButton = styled(SSecondaryButton)`
+  color: #e72035;
+  &:hover {
     color: #ffffff;
     background-color: #e72035;
+  }
+`;
+
+const SConfirmButton = styled(SSecondaryButton)`
+  color: #37a34a;
+  &:hover {
+    color: #ffffff;
+    background-color: #37a34a;
   }
 `;
