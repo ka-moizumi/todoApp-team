@@ -14,9 +14,8 @@ app.get("/api", (req, res) => {
 app.get("/db", async (req, res) => {
   // select todo
   try {
-    const sql = "SELECT * FROM `TASK` WHERE `id` = ?";
-    const placeholder = 3;
-    const results = await executeQuery(sql, placeholder);
+    const sql = "SELECT `title` FROM `TASK`";
+    const results = await executeQuery(sql);
     console.log("### RETURN RESULT");
     console.log(results);
     res.send(results);

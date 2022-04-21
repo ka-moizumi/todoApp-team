@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 export const Create = () => {
@@ -11,6 +12,19 @@ export const Create = () => {
 
   const onChange = (e) => setText(e.target.value);
   const onChangeEdit = (e) => setEdit(e.target.value);
+
+  useEffect(() => {
+    axios.get("/db").then((res) => getTodos(res));
+  }, []);
+
+  const getTodos = (res) => {
+    const getTodos = [];
+    res.data.map((todo) => {
+      return getTodos.push(todo.title);
+    });
+    console.log(getTodos);
+    setTodos(getTodos);
+  };
 
   const onClickAdd = () => {
     if (text === "") {
