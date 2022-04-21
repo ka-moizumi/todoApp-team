@@ -14,16 +14,13 @@ export const Create = () => {
   const onChangeEdit = (e) => setEdit(e.target.value);
 
   useEffect(() => {
-    axios.get("/db").then((res) => getTodos(res));
+    getTodos();
   }, []);
 
-  const getTodos = (res) => {
-    const getTodos = [];
-    res.data.map((todo) => {
-      return getTodos.push(todo.title);
+  const getTodos = async () => {
+    await axios.get("/db").then((res) => {
+      setTodos(res.data);
     });
-    console.log(getTodos);
-    setTodos(getTodos);
   };
 
   const onClickAdd = () => {
@@ -35,17 +32,17 @@ export const Create = () => {
     setText("");
   };
 
-  const onClickConfirm = (index) => {
+  const onClickConfirm = (id) => {
     if (edit === "") {
       return setEditOpen(!editOpen);
     } else {
-      todos.splice(index, 1, edit);
+      todos.splice(id, 1, edit);
     }
     setEditOpen(!editOpen);
   };
 
-  const onClickDelete = (index) => {
-    todos.splice(index, 1);
+  const onClickDelete = (id) => {
+    todos.splice(id, 1);
     setTodos([...todos]);
     if (editOpen) setEditOpen(!editOpen);
   };
@@ -55,27 +52,29 @@ export const Create = () => {
     if (editOpen) setEditOpen(!editOpen);
   };
 
-  const onClickEdit = (index) => {
-    setEditIndex(index);
+  const onClickEdit = (id) => {
+    setEditIndex(id);
     setEditOpen(!editOpen);
     setEdit("");
   };
 
-  const editSwitch = (todo, index) => {
-    if (editOpen && editIndex === index) {
+  const editSwitch = (title, id) => {
+    if (editOpen && editIndex === id) {
       return (
         <>
-          <SEditInput placeholder={todo} value={edit} onChange={onChangeEdit} />
-          <SConfirmButton onClick={() => onClickConfirm(index)}>
-            ○
-          </SConfirmButton>
+          <SEditInput
+            placeholder={title}
+            value={edit}
+            onChange={onChangeEdit}
+          />
+          <SConfirmButton onClick={() => onClickConfirm(id)}>○</SConfirmButton>
         </>
       );
     } else {
       return (
         <>
-          {todo}
-          <SEditButton onClick={() => onClickEdit(index)}>編集</SEditButton>
+          {title}
+          <SEditButton onClick={() => onClickEdit(id)}>編集</SEditButton>
         </>
       );
     }
@@ -92,11 +91,11 @@ export const Create = () => {
       </SInputArea>
       <STodosArea>
         <STodos>
-          {todos.map((todo, index) => {
+          {todos.map((todo) => {
             return (
-              <STodo key={index}>
-                {editSwitch(todo, index)}
-                <SDeleteButton onClick={() => onClickDelete(index)}>
+              <STodo key={todo.id}>
+                {editSwitch(todo.title, todo.id)}
+                <SDeleteButton onClick={() => onClickDelete(todo.id)}>
                   ×
                 </SDeleteButton>
               </STodo>

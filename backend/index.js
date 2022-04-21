@@ -14,7 +14,7 @@ app.get("/api", (req, res) => {
 app.get("/db", async (req, res) => {
   // select todo
   try {
-    const sql = "SELECT `title` FROM `TASK`";
+    const sql = "SELECT id,title FROM `TASK`";
     const results = await executeQuery(sql);
     console.log("### RETURN RESULT");
     console.log(results);
