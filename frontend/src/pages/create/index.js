@@ -18,16 +18,33 @@ export const Create = () => {
   }, []);
 
   const getTodos = async () => {
-    await axios.get("/db").then((res) => {
+    await axios.get("/gettodo").then((res) => {
       setTodos(res.data);
     });
+  };
+
+  const addTodos = async (title) => {
+    console.log(title);
+    await axios
+      .post(
+        `/addtodo?title=${title}`,
+        { title: title },
+        {
+          headers: {
+            accept: "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+      });
   };
 
   const onClickAdd = () => {
     if (text === "") {
       return false;
     } else {
-      setTodos([...todos, text]);
+      addTodos(text);
     }
     setText("");
   };

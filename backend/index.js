@@ -11,8 +11,7 @@ app.get("/api", (req, res) => {
   res.json({ message: "Hello World!" });
 });
 
-app.get("/db", async (req, res) => {
-  // select todo
+app.get("/gettodo", async (req, res) => {
   try {
     const sql = "SELECT id,title FROM `TASK`";
     const results = await executeQuery(sql);
@@ -24,6 +23,17 @@ app.get("/db", async (req, res) => {
     res.send({ error: err });
   } finally {
     console.log("### END");
+  }
+});
+
+app.post("/addtodo", (req, res) => {
+  try {
+    console.log(req.query);
+    console.log(req.params);
+    console.log(req.body);
+  } catch (err) {
+    console.log(err);
+    res.send({ error: err });
   }
 });
 
