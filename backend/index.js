@@ -3,6 +3,9 @@ const app = express();
 const port = process.env.PORT || 3001;
 const mysql = require("mysql2/promise");
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.get("/", (req, res) => {
   res.send("Hello TEST nodemon package.json test!");
 });
@@ -11,9 +14,9 @@ app.get("/api", (req, res) => {
   res.json({ message: "Hello World!" });
 });
 
-app.get("/gettodo", async (req, res) => {
+app.get("/getTodos", async (req, res) => {
   try {
-    const sql = "SELECT id,title FROM `TASK`";
+    const sql = "SELECT id,title FROM TASK";
     const results = await executeQuery(sql);
     console.log("### RETURN RESULT");
     console.log(results);
@@ -26,15 +29,19 @@ app.get("/gettodo", async (req, res) => {
   }
 });
 
-app.post("/addtodo", (req, res) => {
-  try {
-    console.log(req.query);
-    console.log(req.params);
-    console.log(req.body);
-  } catch (err) {
-    console.log(err);
-    res.send({ error: err });
-  }
+app.post("/addTodo", async (req, res) => {
+  const sql =
+    "INSERT INTO TASK(title, content, user_id) VALUES(?, 'テスト', '茂泉')";
+  const placeholder = req.body.title;
+  const results = await executeQuery(sql, placeholder);
+  res.send(results);
+});
+
+app.post("/deleteTodo", async (req, res) => {
+  const sql = "DELETE FROM TASK WHERE id=?";
+  const placeholder = req.body.id;
+  const results = await executeQuery(sql, placeholder);
+  res.send(results);
 });
 
 app.listen(port, () => {

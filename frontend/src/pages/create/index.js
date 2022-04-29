@@ -18,32 +18,30 @@ export const Create = () => {
   }, []);
 
   const getTodos = async () => {
-    await axios.get("/gettodo").then((res) => {
+    await axios.get(`/getTodos`).then((res) => {
       setTodos(res.data);
+      console.log(res.data);
     });
   };
 
   const addTodos = async (title) => {
     console.log(title);
-    await axios
-      .post(
-        `/addtodo?title=${title}`,
-        { title: title },
-        {
-          headers: {
-            accept: "application/json",
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-      });
+    await axios.post(`/addTodo`, { title: title }).then(() => {
+      getTodos();
+    });
+  };
+
+  const deleteTodos = async (id) => {
+    await axios.post(`/deleteTodo`, { id: id }).then(() => {
+      getTodos();
+    });
   };
 
   const onClickAdd = () => {
     if (text === "") {
       return false;
     } else {
+      console.log(text);
       addTodos(text);
     }
     setText("");
@@ -59,8 +57,7 @@ export const Create = () => {
   };
 
   const onClickDelete = (id) => {
-    todos.splice(id, 1);
-    setTodos([...todos]);
+    deleteTodos(id);
     if (editOpen) setEditOpen(!editOpen);
   };
 
@@ -73,6 +70,7 @@ export const Create = () => {
     setEditIndex(id);
     setEditOpen(!editOpen);
     setEdit("");
+    console.log(todos);
   };
 
   const editSwitch = (title, id) => {
