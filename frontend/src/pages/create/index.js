@@ -20,12 +20,10 @@ export const Create = () => {
   const getTodos = async () => {
     await axios.get(`/getTodos`).then((res) => {
       setTodos(res.data);
-      console.log(res.data);
     });
   };
 
   const addTodos = async (title) => {
-    console.log(title);
     await axios.post(`/addTodo`, { title: title }).then(() => {
       getTodos();
     });
@@ -37,11 +35,16 @@ export const Create = () => {
     });
   };
 
+  const clearTodos = async () => {
+    await axios.post(`/clearTodos`).then(() => {
+      getTodos();
+    });
+  };
+
   const onClickAdd = () => {
     if (text === "") {
       return false;
     } else {
-      console.log(text);
       addTodos(text);
     }
     setText("");
@@ -62,7 +65,7 @@ export const Create = () => {
   };
 
   const onClickClear = () => {
-    setTodos([]);
+    clearTodos();
     if (editOpen) setEditOpen(!editOpen);
   };
 

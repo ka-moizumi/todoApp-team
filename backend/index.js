@@ -44,6 +44,12 @@ app.post("/deleteTodo", async (req, res) => {
   res.send(results);
 });
 
+app.post("/cleartodos", async (req, res) => {
+  const sql = "TRUNCATE TABLE TASK";
+  const results = await executeQuery(sql);
+  res.send(results);
+});
+
 app.listen(port, () => {
   console.log(`listening on *:${port}`);
 });
