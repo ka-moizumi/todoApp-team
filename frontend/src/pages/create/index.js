@@ -41,6 +41,12 @@ export const Create = () => {
     });
   };
 
+  const editTodos = async (edit, id) => {
+    await axios.post(`/editTodos`, { title: edit, id: id }).then(() => {
+      getTodos();
+    });
+  };
+
   const onClickAdd = () => {
     if (text === "") {
       return false;
@@ -50,13 +56,13 @@ export const Create = () => {
     setText("");
   };
 
-  const onClickConfirm = (id) => {
+  const onClickConfirm = async (id) => {
     if (edit === "") {
       return setEditOpen(!editOpen);
     } else {
-      todos.splice(id, 1, edit);
+      await editTodos(edit, id);
+      setEditOpen(!editOpen);
     }
-    setEditOpen(!editOpen);
   };
 
   const onClickDelete = (id) => {
@@ -73,7 +79,6 @@ export const Create = () => {
     setEditIndex(id);
     setEditOpen(!editOpen);
     setEdit("");
-    console.log(todos);
   };
 
   const editSwitch = (title, id) => {

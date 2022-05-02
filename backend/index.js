@@ -44,9 +44,16 @@ app.post("/deleteTodo", async (req, res) => {
   res.send(results);
 });
 
-app.post("/cleartodos", async (req, res) => {
+app.post("/clearTodos", async (req, res) => {
   const sql = "TRUNCATE TABLE TASK";
   const results = await executeQuery(sql);
+  res.send(results);
+});
+
+app.post("/editTodos", async (req, res) => {
+  const sql = "UPDATE TASK SET title=? WHERE id=?";
+  const placeholder = [req.body.title, req.body.id];
+  const results = await executeQuery(sql, placeholder);
   res.send(results);
 });
 
