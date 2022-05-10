@@ -30,9 +30,8 @@ app.get("/getTodos", async (req, res) => {
 });
 
 app.post("/addTodo", async (req, res) => {
-  const sql =
-    "INSERT INTO TASK(title, content, user_id) VALUES(?, 'テスト', '茂泉')";
-  const placeholder = req.body.title;
+  const sql = "INSERT INTO TASK(title, content, user_id) VALUES(?, ?, ?)";
+  const placeholder = [req.body.title, req.body.content, req.body.user_id];
   const results = await executeQuery(sql, placeholder);
   res.send(results);
 });
@@ -45,12 +44,12 @@ app.post("/deleteTodo", async (req, res) => {
 });
 
 app.post("/clearTodos", async (req, res) => {
-  const sql = "TRUNCATE TABLE TASK";
+  const sql = "DELETE FROM TASK";
   const results = await executeQuery(sql);
   res.send(results);
 });
 
-app.post("/editTodos", async (req, res) => {
+app.post("/editTodo", async (req, res) => {
   const sql = "UPDATE TASK SET title=? WHERE id=?";
   const placeholder = [req.body.title, req.body.id];
   const results = await executeQuery(sql, placeholder);

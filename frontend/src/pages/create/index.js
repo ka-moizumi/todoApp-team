@@ -1,6 +1,13 @@
-import axios from "axios";
+// import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import {
+  getTodos,
+  addTodo,
+  clearTodos,
+  deleteTodo,
+  editTodo,
+} from "../../api/api";
 
 export const Create = () => {
   const [text, setText] = useState("");
@@ -13,45 +20,22 @@ export const Create = () => {
   const onChange = (e) => setText(e.target.value);
   const onChangeEdit = (e) => setEdit(e.target.value);
 
-  useEffect(() => {
-    getTodos();
-  }, []);
-
-  const getTodos = async () => {
-    await axios.get(`/getTodos`).then((res) => {
+  const resTodos = () => {
+    getTodos().then((res) => {
       setTodos(res.data);
     });
   };
 
-  const addTodos = async (title) => {
-    await axios.post(`/addTodo`, { title: title }).then(() => {
-      getTodos();
-    });
-  };
+  useEffect(() => {
+    resTodos();
+  }, []);
 
-  const deleteTodos = async (id) => {
-    await axios.post(`/deleteTodo`, { id: id }).then(() => {
-      getTodos();
-    });
-  };
-
-  const clearTodos = async () => {
-    await axios.post(`/clearTodos`).then(() => {
-      getTodos();
-    });
-  };
-
-  const editTodos = async (edit, id) => {
-    await axios.post(`/editTodos`, { title: edit, id: id }).then(() => {
-      getTodos();
-    });
-  };
-
-  const onClickAdd = () => {
+  const onClickAdd = async () => {
     if (text === "") {
       return false;
     } else {
-      addTodos(text);
+      await addTodo(text);
+      resTodos();
     }
     setText("");
   };
@@ -60,18 +44,21 @@ export const Create = () => {
     if (edit === "") {
       return setEditOpen(!editOpen);
     } else {
-      await editTodos(edit, id);
+      await editTodo(edit, id);
+      resTodos();
       setEditOpen(!editOpen);
     }
   };
 
-  const onClickDelete = (id) => {
-    deleteTodos(id);
+  const onClickDelete = async (id) => {
+    await deleteTodo(id);
+    resTodos();
     if (editOpen) setEditOpen(!editOpen);
   };
 
-  const onClickClear = () => {
-    clearTodos();
+  const onClickClear = async () => {
+    await clearTodos();
+    resTodos();
     if (editOpen) setEditOpen(!editOpen);
   };
 
