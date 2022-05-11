@@ -10,7 +10,6 @@ function App() {
   const [message, setMessage] = useState("");
   useEffect(() => {
     axios.get("/api").then((res) => {
-      console.log(res);
       setMessage(res.data.message);
     });
   }, []);

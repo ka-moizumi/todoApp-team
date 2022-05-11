@@ -3,6 +3,9 @@ const app = express();
 const port = process.env.PORT || 3001;
 const mysql = require("mysql2/promise");
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.get("/", (req, res) => {
   res.send("Hello TEST nodemon package.json test!");
 });
@@ -11,12 +14,10 @@ app.get("/api", (req, res) => {
   res.json({ message: "Hello World!" });
 });
 
-app.get("/db", async (req, res) => {
-  // select todo
+app.get("/getTodos", async (req, res) => {
   try {
-    const sql = "SELECT * FROM `TASK` WHERE `id` = ?";
-    const placeholder = 3;
-    const results = await executeQuery(sql, placeholder);
+    const sql = "SELECT id,title FROM TASK";
+    const results = await executeQuery(sql);
     console.log("### RETURN RESULT");
     console.log(results);
     res.send(results);
@@ -26,6 +27,33 @@ app.get("/db", async (req, res) => {
   } finally {
     console.log("### END");
   }
+});
+
+app.post("/addTodo", async (req, res) => {
+  const sql = "INSERT INTO TASK(title, content, user_id) VALUES(?, ?, ?)";
+  const placeholder = [req.body.title, req.body.content, req.body.user_id];
+  const results = await executeQuery(sql, placeholder);
+  res.send(results);
+});
+
+app.post("/deleteTodo", async (req, res) => {
+  const sql = "DELETE FROM TASK WHERE id=?";
+  const placeholder = req.body.id;
+  const results = await executeQuery(sql, placeholder);
+  res.send(results);
+});
+
+app.post("/clearTodos", async (req, res) => {
+  const sql = "DELETE FROM TASK";
+  const results = await executeQuery(sql);
+  res.send(results);
+});
+
+app.post("/editTodo", async (req, res) => {
+  const sql = "UPDATE TASK SET title=? WHERE id=?";
+  const placeholder = [req.body.title, req.body.id];
+  const results = await executeQuery(sql, placeholder);
+  res.send(results);
 });
 
 app.listen(port, () => {
