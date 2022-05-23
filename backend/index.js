@@ -16,10 +16,8 @@ app.get("/api", (req, res) => {
 
 app.get("/getTodos", async (req, res) => {
   try {
-    const sql = "SELECT id,title FROM TASK";
+    const sql = "SELECT id,title,content,priority FROM TASK";
     const results = await executeQuery(sql);
-    console.log("### RETURN RESULT");
-    console.log(results);
     res.send(results);
   } catch (err) {
     console.error("error query: " + err.stack);
@@ -50,10 +48,14 @@ app.post("/clearTodos", async (req, res) => {
 });
 
 app.post("/editTodo", async (req, res) => {
-  const sql = "UPDATE TASK SET title=? WHERE id=?";
-  const placeholder = [req.body.title, req.body.id];
-  const results = await executeQuery(sql, placeholder);
-  res.send(results);
+  try {
+    const sql = "UPDATE TASK SET title=?, content=? WHERE id=?";
+    const placeholder = [req.body.title, req.body.content, req.body.id];
+    const results = await executeQuery(sql, placeholder);
+    res.send(results);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.listen(port, () => {

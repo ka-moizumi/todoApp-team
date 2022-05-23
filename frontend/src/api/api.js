@@ -4,18 +4,16 @@ export const getTodos = async () => {
   return await axios.get(`/getTodos`);
 };
 
-export const addTodo = async (title) => {
-  await axios
-    .post(`/addTodo`, { title: title, content: "テスト", user_id: "茂泉" })
-    .then(() => {
-      getTodos();
-    });
+export const addTodo = async (title, content) => {
+  await axios.post(`/addTodo`, {
+    title: title,
+    content: content,
+    user_id: "茂泉",
+  });
 };
 
 export const deleteTodo = async (id) => {
-  await axios.post(`/deleteTodo`, { id: id }).then(() => {
-    getTodos();
-  });
+  await axios.post(`/deleteTodo`, { id }).then(() => {});
 };
 
 export const clearTodos = async () => {
@@ -24,8 +22,8 @@ export const clearTodos = async () => {
   });
 };
 
-export const editTodo = async (edit, id) => {
-  await axios.post(`/editTodo`, { title: edit, id: id }).then(() => {
-    getTodos();
+export const editTodo = async (title, content, id) => {
+  await axios.post(`/editTodo`, { title, content, id }).then(() => {
+    console.log({ title, content, id });
   });
 };
