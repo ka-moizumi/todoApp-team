@@ -27,11 +27,8 @@ export const Update = () => {
   const onContentChange = (e) => setContentText(e.target.value);
 
   const onClickUpdate = async () => {
-    if (text === "" || contentText === "") {
-      return false;
-    } else {
-      await editTodo(text, contentText, id);
-    }
+    if (text === "" || contentText === "") return;
+    await editTodo(text, contentText, id);
     history.goBack();
   };
 

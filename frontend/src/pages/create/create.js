@@ -12,11 +12,8 @@ export const Create = () => {
   const onContentChange = (e) => setContentText(e.target.value);
 
   const onClickAdd = async () => {
-    if (text === "" || contentText === "") {
-      return false;
-    } else {
-      await addTodo(text, contentText);
-    }
+    if (text === "" || contentText === "") return;
+    await addTodo(text, contentText);
     history.push("/list");
   };
 
