@@ -2,18 +2,49 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { addTodo } from "../../api/api";
+import { Datepick } from "../parts/datepick";
 
 export const Create = () => {
   const history = useHistory();
   const [text, setText] = useState("");
   const [contentText, setContentText] = useState("");
 
+  const today = new Date();
+  const [startDate, setStartDate] = useState(today);
+
+  const formatDate =
+    startDate.getFullYear() +
+    "-" +
+    (startDate.getMonth() + 1) +
+    "-" +
+    (startDate.getDate() + 1) +
+    " " +
+    "00" +
+    ":" +
+    "00" +
+    ":" +
+    "00";
+
+  const priority = () => {
+    const deadline = ((startDate - today) / 1000 / 60 / 60 / 24 + 2) | 0;
+    console.log(deadline);
+
+    if (deadline > 7) {
+      return 3;
+    } else if (deadline > 3) {
+      return 2;
+    } else {
+      return 1;
+    }
+  };
+
   const onTitleChange = (e) => setText(e.target.value);
   const onContentChange = (e) => setContentText(e.target.value);
 
   const onClickAdd = async () => {
     if (text === "" || contentText === "") return;
-    await addTodo(text, contentText);
+
+    await addTodo(text, contentText, priority(), formatDate);
     history.push("/list");
   };
 
@@ -27,7 +58,7 @@ export const Create = () => {
         </SIndex>
         <SInputItems>
           <SInput>
-            <SInputTitile>title</SInputTitile>
+            <SInputTitile>内容</SInputTitile>
             <SInputText
               placeholder="Todoを入力"
               name="title"
@@ -36,7 +67,7 @@ export const Create = () => {
             />
           </SInput>
           <SInput>
-            <SInputTitile>content</SInputTitile>
+            <SInputTitile>詳細</SInputTitile>
             <SInputText
               placeholder="詳細を入力"
               name="content"
@@ -45,12 +76,14 @@ export const Create = () => {
             />
           </SInput>
           <SInput>
-            <SInputTitile>priority</SInputTitile>
-            <SPriority name="priority">
-              <option value="1">高</option>
-              <option value="2">中</option>
-              <option value="3">低</option>
-            </SPriority>
+            <SInputTitile>期限</SInputTitile>
+            <SDatepicker>
+              <Datepick
+                today={today}
+                startDate={startDate}
+                setStartDate={setStartDate}
+              />
+            </SDatepicker>
           </SInput>
         </SInputItems>
       </SInputArea>
@@ -106,12 +139,8 @@ export const SInputText = styled.input`
   border: 1px solid;
 `;
 
-export const SPriority = styled.select`
+export const SDatepicker = styled.span`
   margin-left: 10px;
-  padding: 2px 1px;
-  border-radius: 8px;
-  border: 1px solid;
-  outline: none;
 `;
 
 export const SAddButton = styled.button`

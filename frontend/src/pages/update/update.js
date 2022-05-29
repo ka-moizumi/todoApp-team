@@ -3,17 +3,18 @@ import { useHistory, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { deleteTodo, editTodo } from "../../api/api";
 import {
+  SDatepicker,
   SIndex,
   SInput,
   SInputArea,
   SInputItems,
   SInputText,
   SInputTitile,
-  SPriority,
   STitle,
   SWrapper,
 } from "../create/create";
 import { SDeleteButton, SPrimaryButton } from "../list/list";
+import { Datepick } from "../parts/datepick";
 
 export const Update = () => {
   const history = useHistory();
@@ -46,7 +47,7 @@ export const Update = () => {
         </SIndex>
         <SInputItems>
           <SInput>
-            <SInputTitile>title</SInputTitile>
+            <SInputTitile>内容</SInputTitile>
             <SInputText
               placeholder={`${location.state.title}`}
               name="title"
@@ -55,7 +56,7 @@ export const Update = () => {
             />
           </SInput>
           <SInput>
-            <SInputTitile>content</SInputTitile>
+            <SInputTitile>詳細</SInputTitile>
             <SInputText
               placeholder={`${location.state.content}`}
               name="content"
@@ -64,12 +65,10 @@ export const Update = () => {
             />
           </SInput>
           <SInput>
-            <SInputTitile>priority</SInputTitile>
-            <SPriority name="priority">
-              <option value="1">高</option>
-              <option value="2">中</option>
-              <option value="3">低</option>
-            </SPriority>
+            <SInputTitile>期限</SInputTitile>
+            <SDatepicker>
+              <Datepick />
+            </SDatepicker>
           </SInput>
         </SInputItems>
         <SBackButton onClick={() => history.goBack()}>戻る</SBackButton>

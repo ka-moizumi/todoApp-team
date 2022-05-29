@@ -4,6 +4,7 @@ import { List } from "./pages/list/list";
 import { Create } from "./pages/create/create";
 import { Header } from "./pages/header/header";
 import { Update } from "./pages/update/update";
+import { Datepick } from "./pages/parts/datepick";
 
 export const App = () => {
   const NotFound = () => {
@@ -26,6 +27,9 @@ export const App = () => {
           </Route>
           <Route path="/update/:id">
             <Update />
+          </Route>
+          <Route path="/date">
+            <Datepick />
           </Route>
           <Route>
             <NotFound />

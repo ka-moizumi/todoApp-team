@@ -17,10 +17,9 @@ CREATE TABLE TASK (
   completion BOOLEAN NOT NULL DEFAULT false,
   user_id VARCHAR(10) NOT NULL,
   update_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deadline DATETIME NOT NULL DEFAULT "2022-1-1",
   PRIMARY KEY  (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
 
 INSERT INTO TASK VALUES (1,'HTMLを学習する','コーポレートサイトを作成する。',1,false,'aikawa','2006-02-15 04:34:33'),
 (2,'CSSを学習する','ハンバーガーメニューを作成する。',2,true,'aikawa','2006-02-15 04:34:33'),

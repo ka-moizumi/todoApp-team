@@ -28,8 +28,15 @@ app.get("/getTodos", async (req, res) => {
 });
 
 app.post("/addTodo", async (req, res) => {
-  const sql = "INSERT INTO TASK(title, content, user_id) VALUES(?, ?, ?)";
-  const placeholder = [req.body.title, req.body.content, req.body.user_id];
+  const sql =
+    "INSERT INTO TASK(title, content, priority, user_id, deadline) VALUES(?, ?, ?, ?, ?)";
+  const placeholder = [
+    req.body.title,
+    req.body.content,
+    req.body.priority,
+    req.body.user_id,
+    req.body.deadline,
+  ];
   const results = await executeQuery(sql, placeholder);
   res.send(results);
 });
@@ -49,8 +56,15 @@ app.post("/clearTodos", async (req, res) => {
 
 app.post("/editTodo", async (req, res) => {
   try {
-    const sql = "UPDATE TASK SET title=?, content=? WHERE id=?";
-    const placeholder = [req.body.title, req.body.content, req.body.id];
+    const sql =
+      "UPDATE TASK SET title=?, content=?, priority=?, deadline=?, WHERE id=?";
+    const placeholder = [
+      req.body.title,
+      req.body.content,
+      req.body.priority,
+      req.body.deadline,
+      req.body.id,
+    ];
     const results = await executeQuery(sql, placeholder);
     res.send(results);
   } catch (err) {

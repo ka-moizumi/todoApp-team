@@ -46,8 +46,8 @@ export const List = () => {
           <thead>
             <SHeaderTr>
               <SIdTh>id</SIdTh>
-              <STitleTh>タイトル</STitleTh>
-              <SContentTh>内容</SContentTh>
+              <STitleTh>内容</STitleTh>
+              <SContentTh>詳細</SContentTh>
               <SPriorityTh>優先度</SPriorityTh>
               <SAdminTh>管理</SAdminTh>
             </SHeaderTr>
