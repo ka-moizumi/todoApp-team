@@ -1,35 +1,36 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { deleteTodo, editTodo } from "../../api/api";
-import {
-  SDatepicker,
-  SIndex,
-  SInput,
-  SInputArea,
-  SInputItems,
-  SInputText,
-  SInputTitile,
-  STitle,
-  SWrapper,
-} from "../create/create";
+import { TextContext } from "../../providers/textProvider";
+import { SIndex, SInputArea, STitle, SWrapper } from "../create/create";
 import { SDeleteButton, SPrimaryButton } from "../list/list";
-import { Datepick } from "../parts/datepick";
+import { formatDate } from "../parts/formatDate";
+import { prioritySelect } from "../parts/prioritySelect";
+import { TodoInputArea } from "../parts/TodoInputArea";
+import { useInput } from "../parts/useInput";
 
 export const Update = () => {
   const history = useHistory();
   const location = useLocation();
+
+  const text = useInput();
+  const contentText = useInput();
+
   const { id } = useParams();
 
-  const [text, setText] = useState("");
-  const [contentText, setContentText] = useState("");
-
-  const onTitleChange = (e) => setText(e.target.value);
-  const onContentChange = (e) => setContentText(e.target.value);
+  const { today, startDate, setStartDate } = useContext(TextContext);
 
   const onClickUpdate = async () => {
-    if (text === "" || contentText === "") return;
-    await editTodo(text, contentText, id);
+    console.log(text);
+    if (text.text === "" || contentText.text === "") return;
+    await editTodo(
+      text.text,
+      contentText.text,
+      prioritySelect(startDate, today),
+      formatDate(startDate),
+      id
+    );
     history.goBack();
   };
 
@@ -38,6 +39,11 @@ export const Update = () => {
     history.goBack();
   };
 
+  useEffect(() => {
+    setStartDate(today);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <SWrapper>
       <h1>Todo更新</h1>
@@ -45,32 +51,14 @@ export const Update = () => {
         <SIndex>
           <STitle>{id} Update</STitle>
         </SIndex>
-        <SInputItems>
-          <SInput>
-            <SInputTitile>内容</SInputTitile>
-            <SInputText
-              placeholder={`${location.state.title}`}
-              name="title"
-              value={text}
-              onChange={onTitleChange}
-            />
-          </SInput>
-          <SInput>
-            <SInputTitile>詳細</SInputTitile>
-            <SInputText
-              placeholder={`${location.state.content}`}
-              name="content"
-              value={contentText}
-              onChange={onContentChange}
-            />
-          </SInput>
-          <SInput>
-            <SInputTitile>期限</SInputTitile>
-            <SDatepicker>
-              <Datepick />
-            </SDatepicker>
-          </SInput>
-        </SInputItems>
+        <TodoInputArea
+          titlePlaceholder={`${location.state.title}`}
+          titleText={text.text}
+          titleOnchange={text.onTextChange}
+          contentPlaceholder={`${location.state.content}`}
+          contentText={contentText.text}
+          contentOnTextChange={contentText.onTextChange}
+        />
         <SBackButton onClick={() => history.goBack()}>戻る</SBackButton>
         <SDeleteButton onClick={() => onClickDelete()}>削除</SDeleteButton>
         <SUpdateButton onClick={() => onClickUpdate()}>更新</SUpdateButton>

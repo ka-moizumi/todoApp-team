@@ -16,7 +16,7 @@ app.get("/api", (req, res) => {
 
 app.get("/getTodos", async (req, res) => {
   try {
-    const sql = "SELECT id,title,content,priority FROM TASK";
+    const sql = "SELECT id,title,content,priority,deadline FROM TASK";
     const results = await executeQuery(sql);
     res.send(results);
   } catch (err) {
@@ -57,7 +57,7 @@ app.post("/clearTodos", async (req, res) => {
 app.post("/editTodo", async (req, res) => {
   try {
     const sql =
-      "UPDATE TASK SET title=?, content=?, priority=?, deadline=?, WHERE id=?";
+      "UPDATE TASK SET title=?, content=?, priority=?, deadline=? WHERE id=?";
     const placeholder = [
       req.body.title,
       req.body.content,

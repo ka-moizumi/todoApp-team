@@ -30,6 +30,7 @@ export const List = () => {
         title: todo.title,
         content: todo.content,
         priprity: todo.priority,
+        deadline: todo.deadline,
       },
     });
   };
@@ -64,6 +65,7 @@ export const List = () => {
                     <SEditButton onClick={() => onClickEdit(todo)}>
                       編集
                     </SEditButton>
+                    <SCompleteButton>完了</SCompleteButton>
                   </td>
                 </STodo>
               );
@@ -124,6 +126,13 @@ const SEditButton = styled(SPrimaryButton)`
   color: #fcc800;
   &:hover {
     background-color: #fcc800;
+  }
+`;
+
+const SCompleteButton = styled(SPrimaryButton)`
+  color: #37a34a;
+  &:hover {
+    background-color: #37a34a;
   }
 `;
 

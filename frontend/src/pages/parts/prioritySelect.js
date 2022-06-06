@@ -1,7 +1,5 @@
-export const prioritySelect = (props) => {
-  const { today, startDate } = props;
+export const prioritySelect = (startDate, today) => {
   const deadline = ((startDate - today) / 1000 / 60 / 60 / 24 + 2) | 0;
-  console.log(deadline);
 
   if (deadline > 7) {
     return 3;
