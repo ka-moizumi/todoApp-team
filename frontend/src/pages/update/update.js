@@ -4,11 +4,12 @@ import styled from "styled-components";
 import { deleteTodo, editTodo } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
 import { SIndex, SInputArea, STitle, SWrapper } from "../create/create";
-import { SDeleteButton, SPrimaryButton } from "../list/list";
-import { formatDate } from "../parts/formatDate";
-import { prioritySelect } from "../parts/prioritySelect";
-import { TodoInputArea } from "../parts/TodoInputArea";
-import { useInput } from "../parts/useInput";
+import { SDeleteButton } from "../list/list";
+import { formatDate } from "../common/formatDate";
+import { prioritySelect } from "../common/prioritySelect";
+import { TodoInputArea } from "../common/TodoInputArea";
+import { useInput } from "../../hooks/useInput";
+import { SPrimaryButton } from "../list/listTable";
 
 export const Update = () => {
   const history = useHistory();
@@ -21,13 +22,15 @@ export const Update = () => {
 
   const { today, startDate, setStartDate } = useContext(TextContext);
 
+  const userData = JSON.parse(sessionStorage.getItem("userData"));
+
   const onClickUpdate = async () => {
-    console.log(text);
     if (text.text === "" || contentText.text === "") return;
     await editTodo(
       text.text,
       contentText.text,
       prioritySelect(startDate, today),
+      userData["id"],
       formatDate(startDate),
       id
     );
@@ -52,12 +55,12 @@ export const Update = () => {
           <STitle>{id} Update</STitle>
         </SIndex>
         <TodoInputArea
-          titlePlaceholder={`${location.state.title}`}
-          titleText={text.text}
-          titleOnchange={text.onTextChange}
-          contentPlaceholder={`${location.state.content}`}
+          textPlaceholder={`${location.state.title}`}
+          text={text.text}
+          textOnChange={text.textOnChange}
+          contentTextPlaceholder={`${location.state.content}`}
           contentText={contentText.text}
-          contentOnTextChange={contentText.onTextChange}
+          contentTextOnChange={contentText.textOnChange}
         />
         <SBackButton onClick={() => history.goBack()}>戻る</SBackButton>
         <SDeleteButton onClick={() => onClickDelete()}>削除</SDeleteButton>

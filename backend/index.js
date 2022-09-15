@@ -6,18 +6,44 @@ const mysql = require("mysql2/promise");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.send("Hello TEST nodemon package.json test!");
+app.post("/signUpInfo", async (req, res) => {
+  const sql =
+    "INSERT INTO USER(mail_address, user_name, password) VALUES(?, ?, ?)";
+  const placeholder = [req.body.email, req.body.user, req.body.password];
+  const results = await executeQuery(sql, placeholder);
+  res.send(results);
 });
 
-app.get("/api", (req, res) => {
-  res.json({ message: "Hello World!" });
-});
-
-app.get("/getTodos", async (req, res) => {
+app.post("/getUserId", async (req, res) => {
   try {
-    const sql = "SELECT id,title,content,priority,deadline FROM TASK";
-    const results = await executeQuery(sql);
+    const sql = "SELECT id,user_name FROM USER WHERE mail_address = ?";
+    const placeholder = [req.body.email];
+    const results = await executeQuery(sql, placeholder);
+    res.send(results);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.post("/getUserInfo", async (req, res) => {
+  try {
+    const sql =
+      "SELECT id,user_name FROM USER WHERE mail_address = ? AND password = ?";
+    const placeholder = [req.body.email, req.body.password];
+    const results = await executeQuery(sql, placeholder);
+    res.send(results);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+app.post("/getTodos", async (req, res) => {
+  try {
+    console.log(req.body.userId);
+    const sql =
+      "SELECT id,title,content,completion,priority,deadline FROM TASK WHERE user_id = ?";
+    const placeholder = [req.body.userId];
+    const results = await executeQuery(sql, placeholder);
     res.send(results);
   } catch (err) {
     console.error("error query: " + err.stack);
@@ -46,6 +72,17 @@ app.post("/deleteTodo", async (req, res) => {
   const placeholder = req.body.id;
   const results = await executeQuery(sql, placeholder);
   res.send(results);
+});
+
+app.post("/completionChange", async (req, res) => {
+  try {
+    const sql = "UPDATE TASK SET completion=? WHERE id=?";
+    const placeholder = [req.body.completion, req.body.id];
+    const results = await executeQuery(sql, placeholder);
+    res.send(results);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.post("/clearTodos", async (req, res) => {

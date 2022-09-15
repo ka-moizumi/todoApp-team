@@ -3,10 +3,10 @@ import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { addTodo } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
-import { formatDate } from "../parts/formatDate";
-import { prioritySelect } from "../parts/prioritySelect";
-import { TodoInputArea } from "../parts/TodoInputArea";
-import { useInput } from "../parts/useInput";
+import { formatDate } from "../common/formatDate";
+import { prioritySelect } from "../common/prioritySelect";
+import { TodoInputArea } from "../common/TodoInputArea";
+import { useInput } from "../../hooks/useInput";
 
 export const Create = () => {
   const history = useHistory();
@@ -16,12 +16,15 @@ export const Create = () => {
 
   const { today, startDate, setStartDate } = useContext(TextContext);
 
+  const userData = JSON.parse(sessionStorage.getItem("userData"));
+
   const onClickAdd = async () => {
     if (text.text === "" || contentText.text === "") return;
     await addTodo(
       text.text,
       contentText.text,
       prioritySelect(startDate, today),
+      userData["id"],
       formatDate(startDate)
     );
     history.push("/list");
@@ -41,12 +44,12 @@ export const Create = () => {
           <SAddButton onClick={onClickAdd}>+</SAddButton>
         </SIndex>
         <TodoInputArea
-          titlePlaceholder={"Todoを入力"}
-          titleText={text.text}
-          titleOnchange={text.onTextChange}
-          contentPlaceholder={"詳細を入力"}
+          textPlaceholder={"Todoを入力"}
+          text={text.text}
+          textOnChange={text.textOnChange}
+          contentTextPlaceholder={"詳細を入力"}
           contentText={contentText.text}
-          contentOnTextChange={contentText.onTextChange}
+          contentTextOnChange={contentText.textOnChange}
         />
       </SInputArea>
     </SWrapper>
