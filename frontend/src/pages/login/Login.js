@@ -1,16 +1,25 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { getUserInfo } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
-import { useInput } from "../../hooks/useInput";
+import { useForm } from "react-hook-form";
 
 export const Login = () => {
+  const {
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    reValidateMode: "onSubmit",
+    criteriaMode: "all",
+  });
+
   const history = useHistory();
   const { login } = useContext(TextContext);
 
-  const email = useInput();
-  const password = useInput();
+  const [loginErrorMessage, setLoginErrorMessage] = useState();
 
   //新規登録ページへ画面遷移
   const transitionSignUpPage = async () => {
@@ -19,42 +28,71 @@ export const Login = () => {
 
   //ログイン
   const userLogin = async () => {
-    if (email.text === "" || password.text === "") return;
-    await getUserInfo(email.text, password.text).then(async (res) => {
-      const userData = { id: res.data[0].id, name: res.data[0].user_name };
-      console.log(userData);
-      sessionStorage.setItem("userData", JSON.stringify(userData));
-      await login();
+    await getUserInfo(watch("email"), watch("password")).then(async (res) => {
+      if (res.data.length !== 0) {
+        const userData = { id: res.data[0].id, name: res.data[0].user_name };
+        sessionStorage.setItem("userData", JSON.stringify(userData));
+        await login();
+      } else {
+        setLoginErrorMessage("入力内容に誤りがあります。");
+        setTimeout(() => {
+          setLoginErrorMessage("");
+        }, 3000);
+      }
     });
   };
 
   return (
     <>
       <SLoginWrapper>
-        <p>ログイン</p>
-        <SLoginInputArea>
+        <SLoginInputArea onSubmit={handleSubmit(userLogin)}>
+          <p>ログイン</p>
           <SLoginInput
-            name="email"
+            id="email"
+            {...register("email", {
+              required: {
+                value: true,
+                message: "入力は必須です。",
+              },
+            })}
             type="email"
             placeholder="メールアドレス"
-            onChange={email.textOnChange}
           />
+          {errors.email?.message && (
+            <SVaridateMessage>{errors.email.message}</SVaridateMessage>
+          )}
           <SLoginInput
-            name="password"
+            id="password"
+            {...register("password", {
+              required: {
+                value: true,
+                message: "入力は必須です。",
+              },
+              minLength: {
+                value: 5,
+                message: "5文字以上入力してください。",
+              },
+            })}
             type="password"
             placeholder="パスワード"
-            onChange={password.textOnChange}
           />
+          {errors.password?.message && (
+            <SVaridateMessage>{errors.password.message}</SVaridateMessage>
+          )}
+          <SLoginButton type="submit">ログイン</SLoginButton>
+          {loginErrorMessage && (
+            <SVaridateMessage>{loginErrorMessage}</SVaridateMessage>
+          )}
         </SLoginInputArea>
-        <SLoginButton onClick={userLogin}>ログイン</SLoginButton>
+        <p onClick={transitionSignUpPage}>新規登録画面</p>
       </SLoginWrapper>
-      <p onClick={transitionSignUpPage}>新規登録画面</p>
     </>
   );
 };
 
 export const SLoginWrapper = styled.div`
-  margin-top: 50px;
+  margin: 50px;
+  padding-bottom: 20px;
   width: 300px;
   height: 400px;
   background-color: #ccedee;
@@ -62,14 +100,17 @@ export const SLoginWrapper = styled.div`
 `;
 
 export const SLoginInputArea = styled.form`
-  margin-top: 50px;
+  height: 100%;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const SLoginInput = styled.input`
   width: 200px;
-  height: 30px;
-  padding: 0 10px;
-  margin: 10px 0;
+  height: 20px;
+  padding: 10px 10px;
+  margin: 10px auto;
   border-radius: 8px;
   border: 1px solid;
 `;
@@ -77,7 +118,12 @@ export const SLoginInput = styled.input`
 export const SLoginButton = styled.button`
   width: 220px;
   height: 40px;
+  margin: auto auto 0 auto;
   border-radius: 8px;
   border: none;
   outline: none;
+`;
+
+export const SVaridateMessage = styled.div`
+  color: #e72035;
 `;

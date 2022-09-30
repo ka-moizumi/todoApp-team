@@ -2,15 +2,27 @@ import { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { signUpInfo, getUserInfo } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
-import { useInput } from "../../hooks/useInput";
+import { useForm } from "react-hook-form";
+
 import {
   SLoginButton,
   SLoginInput,
   SLoginInputArea,
   SLoginWrapper,
+  SVaridateMessage,
 } from "./Login";
 
 export const SignUp = () => {
+  const {
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    reValidateMode: "onSubmit",
+    criteriaMode: "all",
+  });
+
   const history = useHistory();
   const { login } = useContext(TextContext);
 
@@ -20,12 +32,11 @@ export const SignUp = () => {
 
   // アカウント作成
   const signUpAccount = async () => {
-    if (email.text === "" || user.text === "" || password.text === "") return;
     // ユーザを登録
-    await signUpInfo(email.text, user.text, password.text);
+    await signUpInfo(watch("email"), watch("name"), watch("password"));
 
     // ユーザ情報を取得
-    await getUserInfo(email.text, password.text).then(async (res) => {
+    await getUserInfo(watch("email"), watch("password")).then(async (res) => {
       const userData = { id: res.data[0].id, name: res.data[0].user_name };
       sessionStorage.setItem("userData", JSON.stringify(userData));
       await login();
@@ -33,37 +44,61 @@ export const SignUp = () => {
     });
   };
 
-  const user = useInput();
-  const email = useInput();
-  const password = useInput();
-
   return (
     <>
       <SLoginWrapper>
-        <p>アカウント作成</p>
-        <SLoginInputArea>
+        <SLoginInputArea onSubmit={handleSubmit(signUpAccount)}>
+          <p>アカウント作成</p>
           <SLoginInput
-            name="name"
+            id="name"
+            {...register("name", {
+              required: {
+                value: true,
+                message: "入力は必須です。",
+              },
+            })}
             type="text"
             placeholder="ユーザ名"
-            onChange={user.textOnChange}
           />
+          {errors.name?.message && (
+            <SVaridateMessage>{errors.name.message}</SVaridateMessage>
+          )}
           <SLoginInput
-            name="email"
+            id="email"
+            {...register("email", {
+              required: {
+                value: true,
+                message: "入力は必須です。",
+              },
+            })}
             type="email"
             placeholder="メールアドレス"
-            onChange={email.textOnChange}
           />
+          {errors.email?.message && (
+            <SVaridateMessage>{errors.email.message}</SVaridateMessage>
+          )}
           <SLoginInput
-            name="password"
+            id="password"
+            {...register("password", {
+              required: {
+                value: true,
+                message: "入力は必須です。",
+              },
+              minLength: {
+                value: 5,
+                message: "5文字以上入力してください。",
+              },
+            })}
             type="password"
             placeholder="パスワード"
-            onChange={password.textOnChange}
           />
+          {errors.password?.message && (
+            <SVaridateMessage>{errors.password.message}</SVaridateMessage>
+          )}
+          <SLoginButton type="submit">登録</SLoginButton>
         </SLoginInputArea>
-        <SLoginButton onClick={signUpAccount}>登録</SLoginButton>
+        <p onClick={transitionLoginPage}>ログイン画面</p>
       </SLoginWrapper>
-      <p onClick={transitionLoginPage}>ログイン画面</p>
     </>
   );
 };
