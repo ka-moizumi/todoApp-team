@@ -15,10 +15,17 @@ export const getUserInfo = async (email, password) => {
   });
 };
 
-export const getTodos = async (userId) => {
-  return await axios.post(`/getTodos`, { userId: userId });
+// Todoを取得
+export const getTodos = async (user_id) => {
+  return await axios.post(`/getTodos`, { user_id });
 };
 
+//Todoの日付を取得
+export const getTodosDate = async (user_id) => {
+  return await axios.post(`/getTodosDate`, { user_id });
+};
+
+// Todoを追加
 export const addTodo = async (title, content, priority, user_id, deadline) => {
   await axios.post(`/addTodo`, {
     title: title,
@@ -29,20 +36,36 @@ export const addTodo = async (title, content, priority, user_id, deadline) => {
   });
 };
 
+// Todoを削除
 export const deleteTodo = async (id) => {
   await axios.post(`/deleteTodo`, { id });
 };
 
-export const clearTodos = async () => {
-  await axios.post(`/clearTodos`).then(() => {
-    getTodos();
-  });
+// Todoを全削除
+export const clearTodos = async (user_id) => {
+  await axios.post(`/clearTodos`, { user_id });
 };
 
+// 完了・未完了のステータス切り替え
 export const completionChange = async (completion, id) => {
   await axios.post(`/completionChange`, { completion, id });
 };
 
-export const editTodo = async (title, content, priority, deadline, id) => {
-  await axios.post(`/editTodo`, { title, content, priority, deadline, id });
+// Todoを更新
+export const editTodo = async (
+  title,
+  content,
+  priority,
+  user_id,
+  deadline,
+  id
+) => {
+  await axios.post(`/editTodo`, {
+    title,
+    content,
+    priority,
+    user_id,
+    deadline,
+    id,
+  });
 };

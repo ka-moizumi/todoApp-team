@@ -7,6 +7,7 @@ import { Login } from "../pages/login/Login";
 import { Update } from "../pages/update/update";
 import { TextContext } from "../providers/textProvider";
 import { AuthJudge } from "../function/AuthJudge";
+import { Home } from "../pages/home/home";
 
 const NotFound = () => {
   const { isAuth } = useContext(TextContext);
@@ -19,7 +20,7 @@ export const MainPages = () => {
   return (
     <Switch>
       <Route exact path="/">
-        {isAuth ? "home" : <Login />}
+        {isAuth ? <Home /> : <Login />}
       </Route>
       <Route path="/signUp">
         <SignUp />

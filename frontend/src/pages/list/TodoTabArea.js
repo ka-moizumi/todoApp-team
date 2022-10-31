@@ -17,7 +17,7 @@ export const TodoTabArea = (props) => {
           <SIdTh>ID</SIdTh>
           <STitleTh>内容</STitleTh>
           <SContentTh>詳細</SContentTh>
-          <SPriorityTh>優先度</SPriorityTh>
+          <SDeadlineTh>期限</SDeadlineTh>
           <SAdminTh>管理</SAdminTh>
         </SHeaderTr>
       </thead>
@@ -28,7 +28,7 @@ export const TodoTabArea = (props) => {
               <td>{todo.id}</td>
               <td>{todo.title}</td>
               <td>{todo.content}</td>
-              <td>{todo.priority}</td>
+              <td>{todo.deadline}</td>
               <td>
                 <SEditButton onClick={() => onClickEdit(todo)}>
                   編集
@@ -78,19 +78,19 @@ const STitleTh = styled.th`
 `;
 
 const SContentTh = styled.th`
-  width: 42%;
+  width: 40%;
 `;
 
-const SPriorityTh = styled.th`
+const SDeadlineTh = styled.th`
   width: 7%;
 `;
 
 const SAdminTh = styled.th`
-  width: 14%;
+  width: 15%;
 `;
 
-const SPrimaryButton = styled.button`
-  margin: 5px 10px;
+export const SPrimaryButton = styled.button`
+  margin: 5px 3px;
   padding: 3px 8px;
   border-radius: 8px;
   border: none;

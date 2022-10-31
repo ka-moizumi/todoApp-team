@@ -37,12 +37,13 @@ app.post("/getUserInfo", async (req, res) => {
   }
 });
 
+// Todoを取得
 app.post("/getTodos", async (req, res) => {
   try {
-    console.log(req.body.userId);
+    console.log(req.body.user_id);
     const sql =
-      "SELECT id,title,content,completion,priority,deadline FROM TASK WHERE user_id = ?";
-    const placeholder = [req.body.userId];
+      "SELECT id, title, content, completion, priority, DATE_FORMAT(deadline, '%m/%d') AS deadline FROM TASK WHERE user_id = ?";
+    const placeholder = [req.body.user_id];
     const results = await executeQuery(sql, placeholder);
     res.send(results);
   } catch (err) {
@@ -53,6 +54,19 @@ app.post("/getTodos", async (req, res) => {
   }
 });
 
+// Todoの日付を取得
+app.post("/getTodosDate", async (req, res) => {
+  try {
+    const sql = "SELECT completion, deadline FROM TASK WHERE user_id = ?";
+    const placeholder = [req.body.user_id];
+    const results = await executeQuery(sql, placeholder);
+    res.send(results);
+  } catch (err) {
+    console.log({ errror: err });
+  }
+});
+
+// Todoを追加
 app.post("/addTodo", async (req, res) => {
   const sql =
     "INSERT INTO TASK(title, content, priority, user_id, deadline) VALUES(?, ?, ?, ?, ?)";
@@ -76,7 +90,7 @@ app.post("/deleteTodo", async (req, res) => {
 
 app.post("/completionChange", async (req, res) => {
   try {
-    const sql = "UPDATE TASK SET completion=? WHERE id=?";
+    const sql = "UPDATE TASK SET completion = ? WHERE id = ?";
     const placeholder = [req.body.completion, req.body.id];
     const results = await executeQuery(sql, placeholder);
     res.send(results);
@@ -86,19 +100,21 @@ app.post("/completionChange", async (req, res) => {
 });
 
 app.post("/clearTodos", async (req, res) => {
-  const sql = "DELETE FROM TASK";
-  const results = await executeQuery(sql);
+  const sql = "DELETE FROM TASK WHERE user_id = ?";
+  const placeholder = [req.body.user_id];
+  const results = await executeQuery(sql, placeholder);
   res.send(results);
 });
 
 app.post("/editTodo", async (req, res) => {
   try {
     const sql =
-      "UPDATE TASK SET title=?, content=?, priority=?, deadline=? WHERE id=?";
+      "UPDATE TASK SET title=?, content=?, priority=?, user_id=?, deadline=? WHERE id=?";
     const placeholder = [
       req.body.title,
       req.body.content,
       req.body.priority,
+      req.body.user_id,
       req.body.deadline,
       req.body.id,
     ];

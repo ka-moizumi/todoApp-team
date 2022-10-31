@@ -18,8 +18,9 @@ export const List = () => {
   };
 
   const onClickClear = async () => {
-    await clearTodos();
-    resTodos();
+    await clearTodos(userData["id"]).then(() => {
+      resTodos();
+    });
   };
 
   const onClickEdit = (todo) => {

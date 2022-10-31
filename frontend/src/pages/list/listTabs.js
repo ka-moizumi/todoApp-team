@@ -9,12 +9,14 @@ export const ListTabs = (props) => {
 
   const [reverseToggle, setReverseToggle] = useState(false);
 
+  // 順番を逆転
   const onClickReverse = () => {
     const reversedTodos = [...todos].reverse();
     setTodos(reversedTodos);
     setReverseToggle(!reverseToggle);
   };
 
+  // ソート
   const onClickSort = (e) => {
     const value = e.target.value;
     let todoType;
@@ -54,7 +56,7 @@ export const ListTabs = (props) => {
           <option value="0">ID</option>
           <option value="1">内容</option>
           <option value="2">詳細</option>
-          <option value="3">優先度</option>
+          <option value="3">期限</option>
         </select>
       </TabList>
       <TabPanel>

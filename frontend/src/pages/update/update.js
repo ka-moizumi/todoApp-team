@@ -9,7 +9,7 @@ import { formatDate } from "../common/formatDate";
 import { prioritySelect } from "../common/prioritySelect";
 import { TodoInputArea } from "../common/TodoInputArea";
 import { useInput } from "../../hooks/useInput";
-import { SPrimaryButton } from "../list/listTable";
+import { SPrimaryButton } from "../list/TodoTabArea";
 
 export const Update = () => {
   const history = useHistory();
@@ -71,7 +71,7 @@ export const Update = () => {
 };
 
 const SBackButton = styled(SPrimaryButton)`
-  margin-right: 70%;
+  margin-right: 60%;
 `;
 
 const SUpdateButton = styled(SPrimaryButton)`
