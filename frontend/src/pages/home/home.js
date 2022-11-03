@@ -10,8 +10,8 @@ export const Home = () => {
     return JSON.parse(sessionStorage.getItem("userData"));
   }, []);
 
-  const [allChartData, setAllChartData] = useState();
-  const [todayChartData, setTodayChartData] = useState();
+  const [allChartData, setAllChartData] = useState([0, 0, 0]);
+  const [todayChartData, setTodayChartData] = useState([0, 0]);
 
   // Todoの数を取得
   const countTodoNumber = useCallback(async () => {
@@ -74,7 +74,23 @@ export const Home = () => {
         <AllChart data={allChartData} />
       </SChartWapper>
       <SChartWapper>
-        <TodayChart data={todayChartData} />
+        {todayChartData[0] === 0 && todayChartData[1] === 0 ? (
+          <>
+            <SChartTitle>今日のTodo</SChartTitle>
+            <SNoneChartmessage>なし</SNoneChartmessage>
+          </>
+        ) : (
+          <>
+            <TodayChart data={todayChartData} />
+            <SPercentComp>
+              {Math.trunc(
+                (todayChartData[0] / (todayChartData[0] + todayChartData[1])) *
+                  100
+              )}
+              %
+            </SPercentComp>
+          </>
+        )}
       </SChartWapper>
     </SWrapper>
   );
@@ -85,4 +101,25 @@ export const SChartWapper = styled.div`
   width: 500px;
   height: 500px;
   display: inline-block;
+  vertical-align: top;
+  position: relative;
+`;
+
+const SChartTitle = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+  color: #666;
+`;
+
+const SNoneChartmessage = styled.div`
+  font-size: 24px;
+  margin-top: 200px;
+`;
+
+const SPercentComp = styled.span`
+  font-size: 36px;
+  color: #666;
+  position: absolute;
+  top: 270px;
+  left: 210px;
 `;

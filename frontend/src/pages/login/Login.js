@@ -84,7 +84,9 @@ export const Login = () => {
             <SVaridateMessage>{loginErrorMessage}</SVaridateMessage>
           )}
         </SLoginInputArea>
-        <p onClick={transitionSignUpPage}>新規登録画面</p>
+        <STransitionAuthPages onClick={transitionSignUpPage}>
+          新規登録画面
+        </STransitionAuthPages>
       </SLoginWrapper>
     </>
   );
@@ -122,6 +124,15 @@ export const SLoginButton = styled.button`
   border-radius: 8px;
   border: none;
   outline: none;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+export const STransitionAuthPages = styled.p`
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const SVaridateMessage = styled.div`

@@ -9,6 +9,7 @@ import {
   SLoginInput,
   SLoginInputArea,
   SLoginWrapper,
+  STransitionAuthPages,
   SVaridateMessage,
 } from "./Login";
 
@@ -97,7 +98,9 @@ export const SignUp = () => {
           )}
           <SLoginButton type="submit">登録</SLoginButton>
         </SLoginInputArea>
-        <p onClick={transitionLoginPage}>ログイン画面</p>
+        <STransitionAuthPages onClick={transitionLoginPage}>
+          ログイン画面
+        </STransitionAuthPages>
       </SLoginWrapper>
     </>
   );
