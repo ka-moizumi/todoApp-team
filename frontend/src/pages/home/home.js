@@ -71,7 +71,16 @@ export const Home = () => {
   return (
     <SWrapper width={"600px"}>
       <SChartWapper>
-        <AllChart data={allChartData} />
+        {allChartData[0] === 0 &&
+        allChartData[1] === 0 &&
+        allChartData[2] === 0 ? (
+          <>
+            <SChartTitle>全てのTodo</SChartTitle>
+            <SNoneChartmessage>なし</SNoneChartmessage>
+          </>
+        ) : (
+          <AllChart data={allChartData} />
+        )}
       </SChartWapper>
       <SChartWapper>
         {todayChartData[0] === 0 && todayChartData[1] === 0 ? (
@@ -121,5 +130,5 @@ const SPercentComp = styled.span`
   color: #666;
   position: absolute;
   top: 270px;
-  left: 210px;
+  left: 215px;
 `;

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
 import "react-tabs/style/react-tabs.css";
-import { TodoTabArea } from "./TodoTabArea";
+import { SPrimaryButton, TodoTabArea } from "./TodoTabArea";
 
 export const ListTabs = (props) => {
   const { todos, setTodos, onClickCompleteChange, onClickEdit } = props;
@@ -49,9 +49,9 @@ export const ListTabs = (props) => {
       <TabList>
         <Tab>未完了</Tab>
         <Tab>完了</Tab>
-        <button onClick={onClickReverse}>
+        <SPrimaryButton onClick={onClickReverse}>
           {reverseToggle ? "降順" : "昇順"}
-        </button>
+        </SPrimaryButton>
         <select name="sort" onChange={(e) => onClickSort(e)}>
           <option value="0">ID</option>
           <option value="1">内容</option>
