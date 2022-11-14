@@ -67,12 +67,14 @@ export const SignUp = () => {
           <SLoginInput
             id="email"
             {...register("email", {
-              required: {
-                value: true,
-                message: "入力は必須です。",
+              required: "入力は必須です。",
+              pattern: {
+                value:
+                  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                message: "メールアドレスの形式が不正です。",
               },
             })}
-            type="email"
+            type="text"
             placeholder="メールアドレス"
           />
           {errors.email?.message && (
@@ -81,10 +83,7 @@ export const SignUp = () => {
           <SLoginInput
             id="password"
             {...register("password", {
-              required: {
-                value: true,
-                message: "入力は必須です。",
-              },
+              required: "入力は必須です。",
               minLength: {
                 value: 5,
                 message: "5文字以上入力してください。",
