@@ -1,6 +1,6 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { signUpInfo, getUserInfo } from "../../api/api";
+import { signUpInfo, getUserInfo, getDuplicatedEmail } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
 import { useForm } from "react-hook-form";
 
@@ -16,7 +16,6 @@ import {
 export const SignUp = () => {
   const {
     register,
-    watch,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -27,21 +26,32 @@ export const SignUp = () => {
   const history = useHistory();
   const { login } = useContext(TextContext);
 
+  const [emailErrorMessage, setEmailErrorMessage] = useState();
+
   const transitionLoginPage = () => {
     history.push("/");
   };
 
   // アカウント作成
-  const signUpAccount = async () => {
-    // ユーザを登録
-    await signUpInfo(watch("email"), watch("name"), watch("password"));
-
-    // ユーザ情報を取得
-    await getUserInfo(watch("email"), watch("password")).then(async (res) => {
-      const userData = { id: res.data[0].id, name: res.data[0].user_name };
-      sessionStorage.setItem("userData", JSON.stringify(userData));
-      await login();
-      history.push("/");
+  const signUpAccount = async (data) => {
+    // アドレスの重複確認
+    await getDuplicatedEmail(data.email).then(async (res) => {
+      if (!res.data[0].isDuplicatedEmail) {
+        // ユーザを登録
+        await signUpInfo(data);
+        // ユーザ情報を取得
+        await getUserInfo(data).then(async (res) => {
+          const userData = { id: res.data[0].id, user: res.data[0].user_name };
+          sessionStorage.setItem("userData", JSON.stringify(userData));
+          await login();
+          history.push("/");
+        });
+      } else {
+        setEmailErrorMessage("既に登録されたメールアドレスです。");
+        setTimeout(() => {
+          setEmailErrorMessage();
+        }, 3000);
+      }
     });
   };
 
@@ -51,8 +61,8 @@ export const SignUp = () => {
         <SLoginInputArea onSubmit={handleSubmit(signUpAccount)}>
           <p>アカウント作成</p>
           <SLoginInput
-            id="name"
-            {...register("name", {
+            id="user"
+            {...register("user", {
               required: {
                 value: true,
                 message: "入力は必須です。",
@@ -61,8 +71,8 @@ export const SignUp = () => {
             type="text"
             placeholder="ユーザ名"
           />
-          {errors.name?.message && (
-            <SVaridateMessage>{errors.name.message}</SVaridateMessage>
+          {errors.user?.message && (
+            <SVaridateMessage>{errors.user.message}</SVaridateMessage>
           )}
           <SLoginInput
             id="email"
@@ -96,6 +106,9 @@ export const SignUp = () => {
             <SVaridateMessage>{errors.password.message}</SVaridateMessage>
           )}
           <SLoginButton type="submit">登録</SLoginButton>
+          {emailErrorMessage && (
+            <SVaridateMessage>{emailErrorMessage}</SVaridateMessage>
+          )}
         </SLoginInputArea>
         <STransitionAuthPages onClick={transitionLoginPage}>
           ログイン画面

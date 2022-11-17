@@ -1,28 +1,30 @@
 import axios from "axios";
 
-export const signUpInfo = async (emali, user, password) => {
-  return await axios.post(`/signUpInfo`, {
-    email: emali,
-    user: user,
-    password: password,
-  });
+// アカウント作成
+export const signUpInfo = async (userData) => {
+  return await axios.post(`/signUpInfo`, userData);
 };
 
-export const getUserInfo = async (email, password) => {
-  return await axios.post(`/getUserInfo`, {
-    email: email,
-    password: password,
+// ユーザ情報を取得
+export const getUserInfo = async (userData) => {
+  return await axios.get(`/getUserInfo`, {
+    params: userData,
   });
 };
 
 // Todoを取得
 export const getTodos = async (user_id) => {
-  return await axios.post(`/getTodos`, { user_id });
+  return await axios.get(`/getTodos`, { params: { user_id } });
 };
 
 //Todoの日付を取得
 export const getTodosDate = async (user_id) => {
-  return await axios.post(`/getTodosDate`, { user_id });
+  return await axios.get(`/getTodosDate`, { params: { user_id } });
+};
+
+// メールアドレスが既に登録済みか確認
+export const getDuplicatedEmail = async (email) => {
+  return await axios.get(`/getDuplicatedEmail`, { params: { email: email } });
 };
 
 // Todoを追加
@@ -38,17 +40,17 @@ export const addTodo = async (title, content, priority, user_id, deadline) => {
 
 // Todoを削除
 export const deleteTodo = async (id) => {
-  await axios.post(`/deleteTodo`, { id });
+  await axios.delete(`/deleteTodo`, { params: { id } });
 };
 
 // Todoを全削除
 export const clearTodos = async (user_id) => {
-  await axios.post(`/clearTodos`, { user_id });
+  await axios.delete(`/clearTodos`, { params: { user_id } });
 };
 
 // 完了・未完了のステータス切り替え
 export const completionChange = async (completion, id) => {
-  await axios.post(`/completionChange`, { completion, id });
+  await axios.patch(`/completionChange`, { completion, id });
 };
 
 // Todoを更新
@@ -60,7 +62,7 @@ export const editTodo = async (
   deadline,
   id
 ) => {
-  await axios.post(`/editTodo`, {
+  await axios.put(`/editTodo`, {
     title,
     content,
     priority,

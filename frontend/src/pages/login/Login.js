@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 export const Login = () => {
   const {
     register,
-    watch,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -27,8 +26,8 @@ export const Login = () => {
   };
 
   //ログイン
-  const userLogin = async () => {
-    await getUserInfo(watch("email"), watch("password")).then(async (res) => {
+  const userLogin = async (data) => {
+    await getUserInfo(data).then(async (res) => {
       if (res.data.length !== 0) {
         const userData = { id: res.data[0].id, name: res.data[0].user_name };
         sessionStorage.setItem("userData", JSON.stringify(userData));
@@ -36,7 +35,7 @@ export const Login = () => {
       } else {
         setLoginErrorMessage("入力内容に誤りがあります。");
         setTimeout(() => {
-          setLoginErrorMessage("");
+          setLoginErrorMessage();
         }, 3000);
       }
     });

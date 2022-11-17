@@ -6,6 +6,7 @@ const mysql = require("mysql2/promise");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// アカウント作成
 app.post("/signUpInfo", async (req, res) => {
   const sql =
     "INSERT INTO USER(mail_address, user_name, password) VALUES(?, ?, ?)";
@@ -14,22 +15,12 @@ app.post("/signUpInfo", async (req, res) => {
   res.send(results);
 });
 
-app.post("/getUserId", async (req, res) => {
-  try {
-    const sql = "SELECT id,user_name FROM USER WHERE mail_address = ?";
-    const placeholder = [req.body.email];
-    const results = await executeQuery(sql, placeholder);
-    res.send(results);
-  } catch (err) {
-    console.log(err);
-  }
-});
-
-app.post("/getUserInfo", async (req, res) => {
+// ユーザ情報を取得
+app.get("/getUserInfo", async (req, res) => {
   try {
     const sql =
       "SELECT id,user_name FROM USER WHERE mail_address = ? AND password = ?";
-    const placeholder = [req.body.email, req.body.password];
+    const placeholder = [req.query.email, req.query.password];
     const results = await executeQuery(sql, placeholder);
     res.send(results);
   } catch (err) {
@@ -38,12 +29,11 @@ app.post("/getUserInfo", async (req, res) => {
 });
 
 // Todoを取得
-app.post("/getTodos", async (req, res) => {
+app.get("/getTodos", async (req, res) => {
   try {
-    console.log(req.body.user_id);
     const sql =
       "SELECT id, title, content, completion, priority, DATE_FORMAT(deadline, '%m/%d') AS deadline FROM TASK WHERE user_id = ?";
-    const placeholder = [req.body.user_id];
+    const placeholder = req.query.user_id;
     const results = await executeQuery(sql, placeholder);
     res.send(results);
   } catch (err) {
@@ -55,10 +45,23 @@ app.post("/getTodos", async (req, res) => {
 });
 
 // Todoの日付を取得
-app.post("/getTodosDate", async (req, res) => {
+app.get("/getTodosDate", async (req, res) => {
   try {
     const sql = "SELECT completion, deadline FROM TASK WHERE user_id = ?";
-    const placeholder = [req.body.user_id];
+    const placeholder = req.query.user_id;
+    const results = await executeQuery(sql, placeholder);
+    res.send(results);
+  } catch (err) {
+    console.log({ errror: err });
+  }
+});
+
+// メールアドレスが既に登録済みか確認
+app.get("/getDuplicatedEmail", async (req, res) => {
+  try {
+    const sql =
+      "SELECT count(id) AS isDuplicatedEmail FROM USER WHERE mail_address = ?";
+    const placeholder = req.query.email;
     const results = await executeQuery(sql, placeholder);
     res.send(results);
   } catch (err) {
@@ -81,14 +84,24 @@ app.post("/addTodo", async (req, res) => {
   res.send(results);
 });
 
-app.post("/deleteTodo", async (req, res) => {
-  const sql = "DELETE FROM TASK WHERE id=?";
-  const placeholder = req.body.id;
+// Todoを削除
+app.delete("/deleteTodo", async (req, res) => {
+  const sql = "DELETE FROM TASK WHERE id = ?";
+  const placeholder = req.query.id;
   const results = await executeQuery(sql, placeholder);
   res.send(results);
 });
 
-app.post("/completionChange", async (req, res) => {
+// Todoを全削除
+app.delete("/clearTodos", async (req, res) => {
+  const sql = "DELETE FROM TASK WHERE user_id = ?";
+  const placeholder = req.query.user_id;
+  const results = await executeQuery(sql, placeholder);
+  res.send(results);
+});
+
+// 完了・未完了のステータス切り替え
+app.patch("/completionChange", async (req, res) => {
   try {
     const sql = "UPDATE TASK SET completion = ? WHERE id = ?";
     const placeholder = [req.body.completion, req.body.id];
@@ -99,14 +112,8 @@ app.post("/completionChange", async (req, res) => {
   }
 });
 
-app.post("/clearTodos", async (req, res) => {
-  const sql = "DELETE FROM TASK WHERE user_id = ?";
-  const placeholder = [req.body.user_id];
-  const results = await executeQuery(sql, placeholder);
-  res.send(results);
-});
-
-app.post("/editTodo", async (req, res) => {
+// Todoを更新
+app.put("/editTodo", async (req, res) => {
   try {
     const sql =
       "UPDATE TASK SET title=?, content=?, priority=?, user_id=?, deadline=? WHERE id=?";
