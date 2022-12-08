@@ -10,8 +10,6 @@ import { AuthJudge } from "../function/AuthJudge";
 import { Home } from "../pages/home/home";
 
 const NotFound = () => {
-  const { isAuth } = useContext(TextContext);
-  console.log(isAuth);
   return <h2>Not Found Page</h2>;
 };
 
@@ -27,10 +25,10 @@ export const MainPages = () => {
       </Route>
       <AuthJudge>
         <Switch>
-          <Route path="/create">
+          <Route path="/create/:id">
             <Create />
           </Route>
-          <Route path="/list">
+          <Route path="/list/:id">
             <List />
           </Route>
           <Route path="/update/:id">

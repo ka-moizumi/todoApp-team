@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { deleteTodo, editTodo } from "../../api/api";
@@ -10,6 +10,7 @@ import { prioritySelect } from "../common/prioritySelect";
 import { TodoInputArea } from "../common/TodoInputArea";
 import { useInput } from "../../hooks/useInput";
 import { SPrimaryButton } from "../list/TodoTabArea";
+import { SErrorMessage } from "../login/Login";
 
 export const Update = () => {
   const history = useHistory();
@@ -22,24 +23,37 @@ export const Update = () => {
 
   const { today, startDate, setStartDate } = useContext(TextContext);
 
+  const [errorMessage, setErrorMessage] = useState();
   const userData = JSON.parse(sessionStorage.getItem("userData"));
 
   const onClickUpdate = async () => {
-    if (text.text === "" || contentText.text === "") return;
-    await editTodo(
-      text.text,
-      contentText.text,
-      prioritySelect(startDate, today),
-      userData["id"],
-      formatDate(startDate),
-      id
-    );
-    history.goBack();
+    try {
+      if (text.text === "" || contentText.text === "") return;
+      await editTodo(
+        text.text,
+        contentText.text,
+        prioritySelect(startDate, today),
+        userData["id"],
+        formatDate(startDate),
+        id
+      );
+      history.goBack();
+    } catch (err) {
+      setErrorMessage(
+        `Todoの更新ができません。エラーコード:${err.response.status}`
+      );
+    }
   };
 
   const onClickDelete = async () => {
-    await deleteTodo(id);
-    history.goBack();
+    try {
+      await deleteTodo(id);
+      history.goBack();
+    } catch (err) {
+      setErrorMessage(
+        `Todoの削除ができません。エラーコード:${err.response.status}`
+      );
+    }
   };
 
   useEffect(() => {
@@ -50,6 +64,7 @@ export const Update = () => {
   return (
     <SWrapper>
       <h1>Todo更新</h1>
+      {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
       <SInputArea>
         <SIndex>
           <STitle>{id} Update</STitle>

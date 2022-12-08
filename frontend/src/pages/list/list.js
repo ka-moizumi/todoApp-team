@@ -3,24 +3,36 @@ import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { getTodos, clearTodos, completionChange } from "../../api/api";
 import { SIndex, STitle, SWrapper } from "../create/create";
+import { SErrorMessage } from "../login/Login";
 import { ListTabs } from "./listTabs";
 
 export const List = () => {
   const history = useHistory();
   const [todos, setTodos] = useState([]);
+  const [errorMessage, setErrorMessage] = useState();
 
   const userData = JSON.parse(sessionStorage.getItem("userData"));
 
-  const resTodos = () => {
-    getTodos(userData["id"]).then((res) => {
-      setTodos(res.data);
-    });
+  const resTodos = async () => {
+    try {
+      const result = await getTodos(userData.id);
+      setTodos(result.data);
+    } catch (err) {
+      setErrorMessage(
+        `Todoの取得ができません。エラーコード:${err.response.status}`
+      );
+    }
   };
 
   const onClickClear = async () => {
-    await clearTodos(userData["id"]).then(() => {
+    try {
+      await clearTodos(userData.id);
       resTodos();
-    });
+    } catch (err) {
+      setErrorMessage(
+        `Todoの削除ができません。エラーコード:${err.response.status}`
+      );
+    }
   };
 
   const onClickEdit = (todo) => {
@@ -36,8 +48,14 @@ export const List = () => {
   };
 
   const onClickCompleteChange = async (todo) => {
-    await completionChange(!todo.completion, todo.id);
-    resTodos();
+    try {
+      await completionChange(!todo.completion, todo.id);
+      resTodos();
+    } catch (err) {
+      setErrorMessage(
+        `ステータス更新ができません。エラーコード:${err.response.status}`
+      );
+    }
   };
 
   useEffect(() => {
@@ -48,6 +66,7 @@ export const List = () => {
   return (
     <SWrapper>
       <h1>Todoリスト一覧</h1>
+      {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
       <STodosArea>
         <SIndex>
           <STitle>List</STitle>

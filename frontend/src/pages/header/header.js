@@ -14,12 +14,12 @@ export const Header = () => {
         <SLink to="/">ホーム</SLink>
       </SHeaderIndex>
       <SHeaderIndex>
-        <SLink to="/create">Todo新規作成</SLink>
+        <SLink to={`/create/${userData.id}`}>Todo新規作成</SLink>
       </SHeaderIndex>
       <SHeaderIndex>
-        <SLink to="/list">Todoリスト一覧</SLink>
+        <SLink to={`/list/${userData.id}`}>Todoリスト一覧</SLink>
       </SHeaderIndex>
-      <SUserName>ユーザ：{userData["name"]}</SUserName>
+      <SUserName>ユーザ：{userData.name}</SUserName>
       <SLogOUt onClick={logOut}>ログアウト</SLogOUt>
     </SHeader>
   );

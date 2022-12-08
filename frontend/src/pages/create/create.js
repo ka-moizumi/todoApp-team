@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { addTodo } from "../../api/api";
@@ -7,6 +7,7 @@ import { formatDate } from "../common/formatDate";
 import { prioritySelect } from "../common/prioritySelect";
 import { TodoInputArea } from "../common/TodoInputArea";
 import { useInput } from "../../hooks/useInput";
+import { SErrorMessage } from "../login/Login";
 
 export const Create = () => {
   const history = useHistory();
@@ -16,18 +17,26 @@ export const Create = () => {
 
   const { today, startDate, setStartDate } = useContext(TextContext);
 
+  const [errorMessage, setErrorMessage] = useState();
+
   const userData = JSON.parse(sessionStorage.getItem("userData"));
 
   const onClickAdd = async () => {
-    if (text.text === "" || contentText.text === "") return;
-    await addTodo(
-      text.text,
-      contentText.text,
-      prioritySelect(startDate, today),
-      userData["id"],
-      formatDate(startDate)
-    );
-    history.push("/list");
+    try {
+      if (text.text === "" || contentText.text === "") return;
+      await addTodo(
+        text.text,
+        contentText.text,
+        prioritySelect(startDate, today),
+        userData["id"],
+        formatDate(startDate)
+      );
+      history.push(`/list/${userData["id"]}`);
+    } catch (err) {
+      setErrorMessage(
+        `Todoの登録ができません。エラーコード:${err.response.status}`
+      );
+    }
   };
 
   useEffect(() => {
@@ -38,6 +47,7 @@ export const Create = () => {
   return (
     <SWrapper>
       <h1>Todo新規作成</h1>
+      {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
       <SInputArea>
         <SIndex>
           <STitle>Create</STitle>

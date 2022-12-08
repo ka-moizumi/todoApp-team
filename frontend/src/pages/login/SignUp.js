@@ -10,7 +10,7 @@ import {
   SLoginInputArea,
   SLoginWrapper,
   STransitionAuthPages,
-  SVaridateMessage,
+  SErrorMessage,
 } from "./Login";
 
 export const SignUp = () => {
@@ -26,7 +26,7 @@ export const SignUp = () => {
   const history = useHistory();
   const { login } = useContext(TextContext);
 
-  const [emailErrorMessage, setEmailErrorMessage] = useState();
+  const [errorMessage, setErrorMessage] = useState();
 
   const transitionLoginPage = () => {
     history.push("/");
@@ -34,25 +34,52 @@ export const SignUp = () => {
 
   // アカウント作成
   const signUpAccount = async (data) => {
-    // アドレスの重複確認
-    await getDuplicatedEmail(data.email).then(async (res) => {
-      if (!res.data[0].isDuplicatedEmail) {
+    // アドレスの重複確認;
+    try {
+      const resultEmail = await getDuplicatedEmail(data.email);
+      if (!resultEmail.data[0].isDuplicatedEmail) {
         // ユーザを登録
         await signUpInfo(data);
         // ユーザ情報を取得
-        await getUserInfo(data).then(async (res) => {
-          const userData = { id: res.data[0].id, user: res.data[0].user_name };
-          sessionStorage.setItem("userData", JSON.stringify(userData));
-          await login();
-          history.push("/");
-        });
+        const resultUser = await getUserInfo(data);
+
+        const userData = {
+          id: resultUser.data[0].id,
+          name: resultUser.data[0].user_name,
+        };
+        history.push("/");
+        sessionStorage.setItem("userData", JSON.stringify(userData));
+        login();
       } else {
-        setEmailErrorMessage("既に登録されたメールアドレスです。");
+        setErrorMessage("既に登録されたメールアドレスです。");
         setTimeout(() => {
-          setEmailErrorMessage();
+          setErrorMessage();
         }, 3000);
       }
-    });
+    } catch (err) {
+      setErrorMessage(`エラーが発生しました。コード:${err.response.status}`);
+      setTimeout(() => {
+        setErrorMessage();
+      }, 5000);
+    }
+  };
+
+  //メールアドレスの長さを確認
+  const countAddressLength = (email) => {
+    const splitEmail = email.split("@");
+
+    if (splitEmail[0] && splitEmail[1]) {
+      const emailLength = email.length;
+      const localPart = splitEmail[0].length;
+      const domain = splitEmail[1].length;
+      console.log([localPart, domain]);
+
+      if (emailLength < 255 && (localPart > 64 || domain > 253)) {
+        return false;
+      } else {
+        return true;
+      }
+    }
   };
 
   return (
@@ -63,16 +90,13 @@ export const SignUp = () => {
           <SLoginInput
             id="user"
             {...register("user", {
-              required: {
-                value: true,
-                message: "入力は必須です。",
-              },
+              required: "入力は必須です。",
             })}
             type="text"
             placeholder="ユーザ名"
           />
           {errors.user?.message && (
-            <SVaridateMessage>{errors.user.message}</SVaridateMessage>
+            <SErrorMessage>{errors.user.message}</SErrorMessage>
           )}
           <SLoginInput
             id="email"
@@ -83,12 +107,21 @@ export const SignUp = () => {
                   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
                 message: "メールアドレスの形式が不正です。",
               },
+              maxLength: {
+                value: 254,
+                message: "254文字以内。",
+              },
+              validate: {
+                length: (value) =>
+                  countAddressLength(value) ||
+                  "”64文字以内”@”253文字以内”の形式。",
+              },
             })}
             type="text"
             placeholder="メールアドレス"
           />
           {errors.email?.message && (
-            <SVaridateMessage>{errors.email.message}</SVaridateMessage>
+            <SErrorMessage>{errors.email.message}</SErrorMessage>
           )}
           <SLoginInput
             id="password"
@@ -103,12 +136,10 @@ export const SignUp = () => {
             placeholder="パスワード"
           />
           {errors.password?.message && (
-            <SVaridateMessage>{errors.password.message}</SVaridateMessage>
+            <SErrorMessage>{errors.password.message}</SErrorMessage>
           )}
           <SLoginButton type="submit">登録</SLoginButton>
-          {emailErrorMessage && (
-            <SVaridateMessage>{emailErrorMessage}</SVaridateMessage>
-          )}
+          {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
         </SLoginInputArea>
         <STransitionAuthPages onClick={transitionLoginPage}>
           ログイン画面

@@ -4,6 +4,7 @@ import { SWrapper } from "../create/create";
 import { AllChart } from "./allChart";
 import { TodayChart } from "./todayChart";
 import { getTodosDate } from "../../api/api";
+import { SErrorMessage } from "../login/Login";
 
 export const Home = () => {
   const userData = useMemo(() => {
@@ -13,55 +14,67 @@ export const Home = () => {
   const [allChartData, setAllChartData] = useState([0, 0, 0]);
   const [todayChartData, setTodayChartData] = useState([0, 0]);
 
-  // Todoの数を取得
-  const countTodoNumber = useCallback(async () => {
-    const resData = await getTodosDate(userData["id"]).then((res) => {
-      const today = new Date();
-      const getData = res.data;
+  const [errorMessage, setErrorMessage] = useState();
 
-      // 期限ごとにTodoを分ける
-      const highLimitTodos = getData.filter((num) => {
-        const formatGetData = new Date(num.deadline);
-        const limitTime = formatGetData.setDate(formatGetData.getDate() + 1);
-        return limitTime - today < 86400000 && limitTime - today > 0;
-      });
+  //取得したTodo数を分けて返却
+  const separateData = (res) => {
+    const today = new Date();
+    const getData = res.data;
 
-      const normalLimitTodos = getData.filter((num) => {
-        const formatGetData = new Date(num.deadline);
-        const limitTime = formatGetData.setDate(formatGetData.getDate() + 1);
-        return limitTime - today > 86400000 && limitTime - today < 259200000;
-      });
-
-      const lowLimitTodos = getData.filter((num) => {
-        const formatGetData = new Date(num.deadline);
-        const limitTime = formatGetData.setDate(formatGetData.getDate() + 1);
-        return limitTime - today > 259200000;
-      });
-
-      // 完了・未完了を分ける
-      const completeTodos = highLimitTodos.filter((num) => {
-        return num.completion === 1;
-      });
-
-      const imCompleteTodos = highLimitTodos.filter((num) => {
-        return num.completion === 0;
-      });
-
-      //分けたTodo数を配列にする
-      const limitTodos = [
-        highLimitTodos.length,
-        normalLimitTodos.length,
-        lowLimitTodos.length,
-      ];
-
-      const countCompleteTodos = [completeTodos.length, imCompleteTodos.length];
-
-      return [limitTodos, countCompleteTodos];
+    // 期限ごとにTodoを分ける
+    const highLimitTodos = getData.filter((num) => {
+      const formatGetData = new Date(num.deadline);
+      const limitTime = formatGetData.setDate(formatGetData.getDate() + 1);
+      return limitTime - today < 86400000 && limitTime - today > 0;
     });
 
-    // 返ってきたTodo数をuseStateで管理
-    setAllChartData(resData[0]);
-    setTodayChartData(resData[1]);
+    const normalLimitTodos = getData.filter((num) => {
+      const formatGetData = new Date(num.deadline);
+      const limitTime = formatGetData.setDate(formatGetData.getDate() + 1);
+      return limitTime - today > 86400000 && limitTime - today < 259200000;
+    });
+
+    const lowLimitTodos = getData.filter((num) => {
+      const formatGetData = new Date(num.deadline);
+      const limitTime = formatGetData.setDate(formatGetData.getDate() + 1);
+      return limitTime - today > 259200000;
+    });
+
+    // 完了・未完了を分ける
+    const completeTodos = highLimitTodos.filter((num) => {
+      return num.completion === 1;
+    });
+
+    const imCompleteTodos = highLimitTodos.filter((num) => {
+      return num.completion === 0;
+    });
+
+    //分けたTodo数を配列にする
+    const limitTodos = [
+      highLimitTodos.length,
+      normalLimitTodos.length,
+      lowLimitTodos.length,
+    ];
+
+    const countCompleteTodos = [completeTodos.length, imCompleteTodos.length];
+
+    return [limitTodos, countCompleteTodos];
+  };
+
+  // Todoの数を取得
+  const countTodoNumber = useCallback(async () => {
+    try {
+      const chartData = await getTodosDate(userData.id);
+      const separatedCartData = separateData(chartData);
+
+      // 返ってきたTodo数をuseStateで管理
+      setAllChartData(separatedCartData[0]);
+      setTodayChartData(separatedCartData[1]);
+    } catch (err) {
+      setErrorMessage(
+        `チャートを表示できません。エラーコード：${err.response.status}`
+      );
+    }
   }, [userData]);
 
   useEffect(() => {
@@ -70,6 +83,7 @@ export const Home = () => {
 
   return (
     <SWrapper width={"600px"}>
+      {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
       <SChartWapper>
         {allChartData[0] === 0 &&
         allChartData[1] === 0 &&

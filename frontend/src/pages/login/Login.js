@@ -18,7 +18,7 @@ export const Login = () => {
   const history = useHistory();
   const { login } = useContext(TextContext);
 
-  const [loginErrorMessage, setLoginErrorMessage] = useState();
+  const [errorMessage, setErrorMessage] = useState();
 
   //新規登録ページへ画面遷移
   const transitionSignUpPage = async () => {
@@ -27,18 +27,28 @@ export const Login = () => {
 
   //ログイン
   const userLogin = async (data) => {
-    await getUserInfo(data).then(async (res) => {
-      if (res.data.length !== 0) {
-        const userData = { id: res.data[0].id, name: res.data[0].user_name };
+    try {
+      const result = await getUserInfo(data);
+      if (result.data.length !== 0) {
+        const userData = {
+          id: result.data[0].id,
+          name: result.data[0].user_name,
+        };
         sessionStorage.setItem("userData", JSON.stringify(userData));
-        await login();
+        login();
       } else {
-        setLoginErrorMessage("入力内容に誤りがあります。");
+        setErrorMessage("入力内容に誤りがあります。");
         setTimeout(() => {
-          setLoginErrorMessage();
+          setErrorMessage();
         }, 3000);
       }
-    });
+    } catch (err) {
+      console.log(err.response.status);
+      setErrorMessage(`エラーが発生しました。コード:${err.response.status}`);
+      setTimeout(() => {
+        setErrorMessage();
+      }, 5000);
+    }
   };
 
   return (
@@ -60,7 +70,7 @@ export const Login = () => {
             placeholder="メールアドレス"
           />
           {errors.email?.message && (
-            <SVaridateMessage>{errors.email.message}</SVaridateMessage>
+            <SErrorMessage>{errors.email.message}</SErrorMessage>
           )}
           <SLoginInput
             id="password"
@@ -75,12 +85,10 @@ export const Login = () => {
             placeholder="パスワード"
           />
           {errors.password?.message && (
-            <SVaridateMessage>{errors.password.message}</SVaridateMessage>
+            <SErrorMessage>{errors.password.message}</SErrorMessage>
           )}
           <SLoginButton type="submit">ログイン</SLoginButton>
-          {loginErrorMessage && (
-            <SVaridateMessage>{loginErrorMessage}</SVaridateMessage>
-          )}
+          {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
         </SLoginInputArea>
         <STransitionAuthPages onClick={transitionSignUpPage}>
           新規登録画面
@@ -133,6 +141,6 @@ export const STransitionAuthPages = styled.p`
   }
 `;
 
-export const SVaridateMessage = styled.div`
+export const SErrorMessage = styled.div`
   color: #e72035;
 `;

@@ -7,14 +7,15 @@ export const signUpInfo = async (userData) => {
 
 // ユーザ情報を取得
 export const getUserInfo = async (userData) => {
-  return await axios.get(`/getUserInfo`, {
+  const result = await axios.get(`/getUserInfo`, {
     params: userData,
   });
+  return result;
 };
 
 // Todoを取得
 export const getTodos = async (user_id) => {
-  return await axios.get(`/getTodos`, { params: { user_id } });
+  return await axios.get(`/getTodos/${user_id}`);
 };
 
 //Todoの日付を取得
@@ -40,12 +41,12 @@ export const addTodo = async (title, content, priority, user_id, deadline) => {
 
 // Todoを削除
 export const deleteTodo = async (id) => {
-  await axios.delete(`/deleteTodo`, { params: { id } });
+  await axios.delete(`/deleteTodo/${id}`);
 };
 
 // Todoを全削除
 export const clearTodos = async (user_id) => {
-  await axios.delete(`/clearTodos`, { params: { user_id } });
+  await axios.delete(`/clearTodos/${user_id}`);
 };
 
 // 完了・未完了のステータス切り替え
