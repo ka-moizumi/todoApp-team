@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { getUserInfo } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
 import { useForm } from "react-hook-form";
+import { countAddressLength } from "./countAdressLength";
 
 export const Login = () => {
   const {
@@ -64,6 +65,11 @@ export const Login = () => {
                 value:
                   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
                 message: "メールアドレスの形式が不正です。",
+              },
+              validate: {
+                length: (value) =>
+                  countAddressLength(value) ||
+                  "メールアドレスの形式が不正です。",
               },
             })}
             type="text"

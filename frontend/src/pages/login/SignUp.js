@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { signUpInfo, getUserInfo, getDuplicatedEmail } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
 import { useForm } from "react-hook-form";
+import { countAddressLength } from "./countAdressLength";
 
 import {
   SLoginButton,
@@ -64,24 +65,6 @@ export const SignUp = () => {
     }
   };
 
-  //メールアドレスの長さを確認
-  const countAddressLength = (email) => {
-    const splitEmail = email.split("@");
-
-    if (splitEmail[0] && splitEmail[1]) {
-      const emailLength = email.length;
-      const localPart = splitEmail[0].length;
-      const domain = splitEmail[1].length;
-      console.log([localPart, domain]);
-
-      if (emailLength < 255 && (localPart > 64 || domain > 253)) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-  };
-
   return (
     <>
       <SLoginWrapper>
@@ -107,14 +90,10 @@ export const SignUp = () => {
                   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
                 message: "メールアドレスの形式が不正です。",
               },
-              maxLength: {
-                value: 254,
-                message: "254文字以内。",
-              },
               validate: {
                 length: (value) =>
                   countAddressLength(value) ||
-                  "”64文字以内”@”253文字以内”の形式。",
+                  "メールアドレスの形式が不正です。",
               },
             })}
             type="text"
