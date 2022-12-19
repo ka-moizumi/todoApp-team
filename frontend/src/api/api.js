@@ -24,8 +24,8 @@ export const getTodosDate = async (user_id) => {
 };
 
 // メールアドレスが既に登録済みか確認
-export const getDuplicatedEmail = async (email) => {
-  return await axios.get(`/getDuplicatedEmail`, { params: { email: email } });
+export const getUserCountToEmail = async (email) => {
+  return await axios.get(`/getUserCountToEmail`, { params: { email: email } });
 };
 
 // Todoを追加

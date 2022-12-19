@@ -60,10 +60,10 @@ app.get("/getTodosDate", async (req, res) => {
 });
 
 // メールアドレスが既に登録済みか確認
-app.get("/getDuplicatedEmail", async (req, res) => {
+app.get("/getUserCountToEmail", async (req, res) => {
   try {
     const sql =
-      "SELECT count(id) AS isDuplicatedEmail FROM USER WHERE mail_address = ?";
+      "SELECT count(id) AS userCount FROM USER WHERE mail_address = ?";
     const placeholder = req.query.email;
     const results = await executeQuery(sql, placeholder);
     res.send(results);

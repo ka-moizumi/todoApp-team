@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { signUpInfo, getUserInfo, getDuplicatedEmail } from "../../api/api";
+import { signUpInfo, getUserInfo, getUserCountToEmail } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
 import { useForm } from "react-hook-form";
 import { countAddressLength } from "./countAdressLength";
@@ -35,10 +35,11 @@ export const SignUp = () => {
 
   // アカウント作成
   const signUpAccount = async (data) => {
-    // アドレスの重複確認;
+    // TODO: countAddressLengthみたいに入力チェックで実装できないか調べる
+    // アドレスの重複確認
     try {
-      const resultEmail = await getDuplicatedEmail(data.email);
-      if (!resultEmail.data[0].isDuplicatedEmail) {
+      const resultEmail = await getUserCountToEmail(data.email);
+      if (resultEmail.data[0].userCount === 0) {
         // ユーザを登録
         await signUpInfo(data);
         // ユーザ情報を取得
