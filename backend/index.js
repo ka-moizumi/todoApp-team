@@ -42,7 +42,7 @@ app.post(
       const results = await executeQuery(sql, placeholder);
       res.send(results);
     } catch (err) {
-      res.status(503).send(err);
+      res.status(500).send(err);
     }
   }
 );
@@ -81,7 +81,7 @@ app.get(
       const results = await executeQuery(sql, placeholder);
       res.send(results);
     } catch (err) {
-      res.status(503).send(err);
+      res.status(500).send(err);
     }
   }
 );
