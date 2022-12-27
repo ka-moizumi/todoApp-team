@@ -2,36 +2,89 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3001;
 const mysql = require("mysql2/promise");
+const { check, validationResult } = require("express-validator");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // アカウント作成
-app.post("/signUpInfo", async (req, res) => {
-  try {
-    const sql =
-      "INSERT INTO USER(mail_address, user_name, password) VALUES(?, ?, ?)";
-    const placeholder = [req.body.email, req.body.user, req.body.password];
-    const results = await executeQuery(sql, placeholder);
-    res.send(results);
-  } catch (err) {
-    res.status(503).send(err);
+app.post(
+  "/signUpInfo",
+  [
+    check("email")
+      .not()
+      .isEmpty()
+      .withMessage("全ての項目の入力が必須です。")
+      .isEmail()
+      .withMessage("メールアドレスの形式が不正です。")
+      .isLength({ min: 5, max: 253 })
+      .withMessage("メールアドレスの形式が不正です。"),
+    check("user").not().isEmpty().withMessage("全ての項目の入力が必須です。"),
+    check("password")
+      .not()
+      .isEmpty()
+      .withMessage("全ての項目の入力が必須です。")
+      .isLength({ min: 5 })
+      .withMessage("パスワードは5文字以上入力してください。"),
+  ],
+
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // バリデーション失敗
+      return res.status(422).json({ errors: errors.array() });
+    }
+    try {
+      const sql =
+        "INSERT INTO USER(mail_address, user_name, password) VALUES(?, ?, ?)";
+      const placeholder = [req.body.email, req.body.user, req.body.password];
+      const results = await executeQuery(sql, placeholder);
+      res.send(results);
+    } catch (err) {
+      res.status(503).send(err);
+    }
   }
-});
+);
 
 // ユーザ情報を取得
-app.get("/getUserInfo", async (req, res) => {
-  let status = 200;
-  try {
-    const sql =
-      "SELECT id,user_name FROM USER WHERE mail_address = ? AND password = ?";
-    const placeholder = [req.query.email, req.query.password];
-    const results = await executeQuery(sql, placeholder);
-    res.send(results);
-  } catch (err) {
-    res.status(503).send(err);
+app.get(
+  "/getUserInfo",
+  [
+    check("email")
+      .not()
+      .isEmpty()
+      .withMessage("全ての項目の入力が必須です。")
+      .isEmail()
+      .withMessage("メールアドレスの形式が不正です。")
+      .isLength({ min: 5, max: 253 })
+      .withMessage("メールアドレスの形式が不正です。"),
+    check("password")
+      .not()
+      .isEmpty()
+      .withMessage("全ての項目の入力が必須です。")
+      .isLength({ min: 5 })
+      .withMessage("パスワードは5文字以上入力してください。"),
+  ],
+
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // バリデーション失敗
+      return res.status(422).json({ errors: errors.array() });
+    }
+    try {
+      const sql =
+        "SELECT id,user_name FROM USER WHERE mail_address = ? AND password = ?";
+      const placeholder = [req.query.email, req.query.password];
+      const results = await executeQuery(sql, placeholder);
+      res.send(results);
+    } catch (err) {
+      res.status(503).send(err);
+    }
   }
-});
+);
 
 // Todoを取得
 app.get(`/getTodos/:userId`, async (req, res) => {
@@ -42,8 +95,7 @@ app.get(`/getTodos/:userId`, async (req, res) => {
     const results = await executeQuery(sql, placeholder);
     res.send(results);
   } catch (err) {
-    console.error("error query: " + err.stack);
-    res.status(503).send(err);
+    res.status(500).send(err);
   }
 });
 
@@ -55,7 +107,7 @@ app.get("/getTodosDate", async (req, res) => {
     const results = await executeQuery(sql, placeholder);
     res.send(results);
   } catch (err) {
-    res.status(503).send(err);
+    res.status(500).send(err);
   }
 });
 
@@ -68,8 +120,7 @@ app.get("/getUserCountToEmail", async (req, res) => {
     const results = await executeQuery(sql, placeholder);
     res.send(results);
   } catch (err) {
-    console.log({ errror: err });
-    res.status(503).send(err);
+    res.status(500).send(err);
   }
 });
 
@@ -88,7 +139,7 @@ app.post("/addTodo", async (req, res) => {
     const results = await executeQuery(sql, placeholder);
     res.send(results);
   } catch (err) {
-    res.status(503).send(err);
+    res.status(500).send(err);
   }
 });
 
@@ -100,7 +151,7 @@ app.delete("/deleteTodo/:todoId", async (req, res) => {
     const results = await executeQuery(sql, placeholder);
     res.send(results);
   } catch (err) {
-    res.status(503).send(err);
+    res.status(500).send(err);
   }
 });
 
@@ -112,7 +163,7 @@ app.delete("/clearTodos/:userId", async (req, res) => {
     const results = await executeQuery(sql, placeholder);
     res.send(results);
   } catch (err) {
-    res.status(503).send(err);
+    res.status(500).send(err);
   }
 });
 
@@ -124,7 +175,7 @@ app.patch("/completionChange", async (req, res) => {
     const results = await executeQuery(sql, placeholder);
     res.send(results);
   } catch (err) {
-    res.status(503).send(err);
+    res.status(500).send(err);
   }
 });
 
@@ -144,7 +195,7 @@ app.put("/editTodo", async (req, res) => {
     const results = await executeQuery(sql, placeholder);
     res.send(results);
   } catch (err) {
-    res.status(503).send(err);
+    res.status(500).send(err);
   }
 });
 

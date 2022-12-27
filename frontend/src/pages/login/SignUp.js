@@ -59,7 +59,11 @@ export const SignUp = () => {
         }, 3000);
       }
     } catch (err) {
-      setErrorMessage(`エラーが発生しました。コード:${err.response.status}`);
+      if (err.response.data.errors !== undefined) {
+        setErrorMessage(err.response.data.errors[0].msg);
+      } else {
+        setErrorMessage("サーバーエラーが発生しました。");
+      }
       setTimeout(() => {
         setErrorMessage();
       }, 5000);
@@ -88,7 +92,7 @@ export const SignUp = () => {
               required: "入力は必須です。",
               pattern: {
                 value:
-                  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+                  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+\.+(?:[a-zA-Z0-9-]+)*$/,
                 message: "メールアドレスの形式が不正です。",
               },
               validate: {
