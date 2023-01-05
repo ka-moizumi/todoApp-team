@@ -1,9 +1,10 @@
 import { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { signUpInfo, getUserInfo, getUserCountToEmail } from "../../api/api";
+import { signUpInfo, getUserInfo } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
 import { useForm } from "react-hook-form";
-import { countAddressLength } from "./countAdressLength";
+import { countAddressLength } from "./countAddressLength";
+import { countUserAddress } from "./countUserAddress";
 
 import {
   SLoginButton,
@@ -35,29 +36,19 @@ export const SignUp = () => {
 
   // アカウント作成
   const signUpAccount = async (data) => {
-    // TODO: countAddressLengthみたいに入力チェックで実装できないか調べる
-    // アドレスの重複確認
     try {
-      const resultEmail = await getUserCountToEmail(data.email);
-      if (resultEmail.data[0].userCount === 0) {
-        // ユーザを登録
-        await signUpInfo(data);
-        // ユーザ情報を取得
-        const resultUser = await getUserInfo(data);
+      // ユーザを登録
+      await signUpInfo(data);
+      // ユーザ情報を取得
+      const resultUser = await getUserInfo(data);
 
-        const userData = {
-          id: resultUser.data[0].id,
-          name: resultUser.data[0].user_name,
-        };
-        history.push("/");
-        sessionStorage.setItem("userData", JSON.stringify(userData));
-        login();
-      } else {
-        setErrorMessage("既に登録されたメールアドレスです。");
-        setTimeout(() => {
-          setErrorMessage();
-        }, 3000);
-      }
+      const userData = {
+        id: resultUser.data[0].id,
+        name: resultUser.data[0].user_name,
+      };
+      history.push("/");
+      sessionStorage.setItem("userData", JSON.stringify(userData));
+      login();
     } catch (err) {
       if (err.response.data.errors !== undefined) {
         setErrorMessage(err.response.data.errors[0].msg);
@@ -99,6 +90,9 @@ export const SignUp = () => {
                 length: (value) =>
                   countAddressLength(value) ||
                   "メールアドレスの形式が不正です。",
+                userCount: async (value) =>
+                  (await countUserAddress(value)) ||
+                  "既に登録されたメールアドレスです。",
               },
             })}
             type="text"

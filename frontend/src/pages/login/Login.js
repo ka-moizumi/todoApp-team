@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { getUserInfo } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
 import { useForm } from "react-hook-form";
-import { countAddressLength } from "./countAdressLength";
+import { countAddressLength } from "./countAddressLength";
 
 export const Login = () => {
   const {
