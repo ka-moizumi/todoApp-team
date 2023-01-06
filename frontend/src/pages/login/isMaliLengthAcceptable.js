@@ -11,5 +11,7 @@ export const isMailLengthAcceptable = (email) => {
     } else {
       return true;
     }
+  } else {
+    return false;
   }
 };
