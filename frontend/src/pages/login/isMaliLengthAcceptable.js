@@ -1,5 +1,5 @@
 //メールアドレスの長さを確認
-export const countAddressLength = (email) => {
+export const isMailLengthAcceptable = (email) => {
   const splitEmail = email.split("@");
 
   if (splitEmail[0] && splitEmail[1]) {

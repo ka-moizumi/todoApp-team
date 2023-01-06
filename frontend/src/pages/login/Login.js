@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { getUserInfo } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
 import { useForm } from "react-hook-form";
-import { countAddressLength } from "./countAddressLength";
+import { isMailLengthAcceptable } from "./isMaliLengthAcceptable";
 
 export const Login = () => {
   const {
@@ -71,7 +71,7 @@ export const Login = () => {
               },
               validate: {
                 length: (value) =>
-                  countAddressLength(value) ||
+                  isMailLengthAcceptable(value) ||
                   "メールアドレスの形式が不正です。",
               },
             })}

@@ -1,7 +1,7 @@
 import { getUserCountToEmail } from "../../api/api";
 
 //　アドレスの重複チェック
-export const countUserAddress = async (email) => {
+export const hasDuplicatedData = async (email) => {
   try {
     const userCount = await getUserCountToEmail(email);
 
