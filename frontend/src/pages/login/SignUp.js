@@ -4,7 +4,7 @@ import { signUpInfo, getUserInfo } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
 import { useForm } from "react-hook-form";
 import { isMailLengthAcceptable } from "./isMaliLengthAcceptable";
-import { hasDuplicatedData } from "./husDuplicatedData";
+import { hasDuplicatedData } from "./hasDuplicatedData";
 
 import {
   SLoginButton,
