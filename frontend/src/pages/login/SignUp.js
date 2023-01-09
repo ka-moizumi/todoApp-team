@@ -3,8 +3,8 @@ import { useHistory } from "react-router-dom";
 import { signUpInfo, getUserInfo } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
 import { useForm } from "react-hook-form";
-import { isMailLengthAcceptable } from "./isMaliLengthAcceptable";
-import { hasDuplicatedData } from "./hasDuplicatedData";
+import { isMailLengthAcceptable } from "../../functional/isMaliLengthAcceptable";
+import { hasDuplicatedData } from "../../functional/hasDuplicatedData";
 
 import {
   SLoginButton,

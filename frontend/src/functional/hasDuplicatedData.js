@@ -1,4 +1,4 @@
-import { getUserCountToEmail } from "../../api/api";
+import { getUserCountToEmail } from "../api/api";
 
 //　アドレスの重複チェック
 export const hasDuplicatedData = async (email) => {
