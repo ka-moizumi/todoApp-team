@@ -2,7 +2,9 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3001;
 const mysql = require("mysql2/promise");
-const { check, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
+const ItemRegistValidator = require("./itemRegistValidator");
+const itemRegistValidator = require("./itemRegistValidator");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -10,23 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 // アカウント作成
 app.post(
   "/signUpInfo",
-  [
-    check("email")
-      .not()
-      .isEmpty()
-      .withMessage("全ての項目の入力が必須です。")
-      .isEmail()
-      .withMessage("メールアドレスの形式が不正です。")
-      .isLength({ min: 5, max: 253 })
-      .withMessage("メールアドレスの形式が不正です。"),
-    check("user").not().isEmpty().withMessage("全ての項目の入力が必須です。"),
-    check("password")
-      .not()
-      .isEmpty()
-      .withMessage("全ての項目の入力が必須です。")
-      .isLength({ min: 5 })
-      .withMessage("パスワードは5文字以上入力してください。"),
-  ],
+  ItemRegistValidator.signUp,
 
   async (req, res) => {
     const errors = validationResult(req);
@@ -50,22 +36,7 @@ app.post(
 // ユーザ情報を取得
 app.get(
   "/getUserInfo",
-  [
-    check("email")
-      .not()
-      .isEmpty()
-      .withMessage("全ての項目の入力が必須です。")
-      .isEmail()
-      .withMessage("メールアドレスの形式が不正です。")
-      .isLength({ min: 5, max: 253 })
-      .withMessage("メールアドレスの形式が不正です。"),
-    check("password")
-      .not()
-      .isEmpty()
-      .withMessage("全ての項目の入力が必須です。")
-      .isLength({ min: 5 })
-      .withMessage("パスワードは5文字以上入力してください。"),
-  ],
+  ItemRegistValidator.getUser,
 
   async (req, res) => {
     const errors = validationResult(req);
@@ -125,23 +96,34 @@ app.get("/getUserCountToEmail", async (req, res) => {
 });
 
 // Todoを追加
-app.post("/addTodo", async (req, res) => {
-  try {
-    const sql =
-      "INSERT INTO TASK(title, content, priority, user_id, deadline) VALUES(?, ?, ?, ?, ?)";
-    const placeholder = [
-      req.body.title,
-      req.body.content,
-      req.body.priority,
-      req.body.user_id,
-      req.body.deadline,
-    ];
-    const results = await executeQuery(sql, placeholder);
-    res.send(results);
-  } catch (err) {
-    res.status(500).send(err);
+app.post(
+  "/addTodo",
+  itemRegistValidator.addTodo,
+
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // バリデーション失敗
+      return res.status(422).json({ errors: errors.array() });
+    }
+    try {
+      const sql =
+        "INSERT INTO TASK(title, content, priority, user_id, deadline) VALUES(?, ?, ?, ?, ?)";
+      const placeholder = [
+        req.body.title,
+        req.body.content,
+        req.body.priority,
+        req.body.user_id,
+        req.body.deadline,
+      ];
+      const results = await executeQuery(sql, placeholder);
+      res.send(results);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   }
-});
+);
 
 // Todoを削除
 app.delete("/deleteTodo/:todoId", async (req, res) => {
@@ -168,19 +150,35 @@ app.delete("/clearTodos/:userId", async (req, res) => {
 });
 
 // 完了・未完了のステータス切り替え
-app.patch("/completionChange", async (req, res) => {
-  try {
-    const sql = "UPDATE TASK SET completion = ? WHERE id = ?";
-    const placeholder = [req.body.completion, req.body.id];
-    const results = await executeQuery(sql, placeholder);
-    res.send(results);
-  } catch (err) {
-    res.status(500).send(err);
+app.patch(
+  "/completionChange",
+  itemRegistValidator.completisionChange,
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // バリデーション失敗
+      return res.status(422).json({ errors: errors.array() });
+    }
+    try {
+      const sql = "UPDATE TASK SET completion = ? WHERE id = ?";
+      const placeholder = [req.body.completion, req.body.id];
+      const results = await executeQuery(sql, placeholder);
+      res.send(results);
+    } catch (err) {
+      res.status(500).send(err);
+    }
   }
-});
+);
 
 // Todoを更新
-app.put("/editTodo", async (req, res) => {
+app.put("/editTodo/:id", itemRegistValidator.editTodo, async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    // バリデーション失敗
+    return res.status(422).json({ errors: errors.array() });
+  }
   try {
     const sql =
       "UPDATE TASK SET title=?, content=?, priority=?, user_id=?, deadline=? WHERE id=?";
@@ -190,7 +188,7 @@ app.put("/editTodo", async (req, res) => {
       req.body.priority,
       req.body.user_id,
       req.body.deadline,
-      req.body.id,
+      req.params.id,
     ];
     const results = await executeQuery(sql, placeholder);
     res.send(results);

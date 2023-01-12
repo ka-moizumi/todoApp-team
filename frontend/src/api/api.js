@@ -63,12 +63,11 @@ export const editTodo = async (
   deadline,
   id
 ) => {
-  await axios.put(`/editTodo`, {
+  await axios.put(`/editTodo/${id}`, {
     title,
     content,
     priority,
     user_id,
     deadline,
-    id,
   });
 };
