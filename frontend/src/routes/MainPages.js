@@ -6,7 +6,7 @@ import { SignUp } from "../pages/login/SignUp";
 import { Login } from "../pages/login/Login";
 import { Update } from "../pages/update/update";
 import { TextContext } from "../providers/textProvider";
-import { AuthJudge } from "../functional/AuthJudge";
+import { AuthJudge } from "../function/AuthJudge";
 import { Home } from "../pages/home/home";
 
 const NotFound = () => {

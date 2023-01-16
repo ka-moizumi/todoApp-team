@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { getUserInfo } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
 import { useForm } from "react-hook-form";
-import { isMailLengthAcceptable } from "../../functional/isMaliLengthAcceptable";
+import { checkDuplicateEmail } from "../../function/checkDuplicateEmail";
 
 export const Login = () => {
   const {
@@ -71,7 +71,7 @@ export const Login = () => {
               },
               validate: {
                 length: (value) =>
-                  isMailLengthAcceptable(value) ||
+                  checkDuplicateEmail(value) ||
                   "メールアドレスの形式が不正です。",
               },
             })}

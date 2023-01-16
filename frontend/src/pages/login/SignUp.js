@@ -3,8 +3,8 @@ import { useHistory } from "react-router-dom";
 import { signUpInfo, getUserInfo } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
 import { useForm } from "react-hook-form";
-import { isMailLengthAcceptable } from "../../functional/isMaliLengthAcceptable";
-import { hasDuplicatedData } from "../../functional/hasDuplicatedData";
+import { checkMailAddressLength } from "../../function/checkMailAddressLength";
+import { checkDuplicateEmail } from "../../function/checkDuplicateEmail";
 
 import {
   SLoginButton,
@@ -88,10 +88,10 @@ export const SignUp = () => {
               },
               validate: {
                 length: (value) =>
-                  isMailLengthAcceptable(value) ||
+                  checkMailAddressLength(value) ||
                   "メールアドレスの形式が不正です。",
                 userCount: async (value) =>
-                  (await hasDuplicatedData(value)) ||
+                  (await checkDuplicateEmail(value)) ||
                   "既に登録されたメールアドレスです。",
               },
             })}
