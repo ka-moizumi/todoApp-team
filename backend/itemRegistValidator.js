@@ -1,4 +1,13 @@
-const { check } = require("express-validator");
+const { check, validationResult } = require("express-validator");
+
+const checkVaridationResult = (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    // バリデーション失敗
+    return res.status(422).json({ errors: errors.array() });
+  }
+};
 
 module.exports = {
   signUp: [
@@ -74,7 +83,7 @@ module.exports = {
       }),
   ],
 
-  completisionChange: [
+  completionChange: [
     check("completion")
       .not()
       .isEmpty()
@@ -123,5 +132,31 @@ module.exports = {
         }
         return true;
       }),
+    check("id")
+      .not()
+      .isEmpty()
+      .withMessage("全ての項目の入力が必須です。")
+      .isInt()
+      .withMessage("整数で入力してください。"),
+  ],
+
+  deleteTodo: [
+    check("todoId")
+      .not()
+      .isEmpty()
+      .withMessage("入力が必須の項目です。")
+      .isInt()
+      .withMessage("整数で入力してください。"),
+  ],
+
+  clearTodos: [
+    check("userId")
+      .not()
+      .isEmpty()
+      .withMessage("入力が必須の項目です。")
+      .isInt()
+      .withMessage("整数で入力してください。"),
   ],
 };
+
+module.exports.checkVaridationResult = checkVaridationResult;
