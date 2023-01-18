@@ -38,7 +38,6 @@ app.get(
     if (itemRegistValidator.checkVaridationResult(req, res)) {
       return;
     }
-
     try {
       const sql =
         "SELECT id,user_name FROM USER WHERE mail_address = ? AND password = ?";
@@ -232,3 +231,5 @@ const executeQuery = async (sql, placeholder) => {
     await conn.end();
   }
 };
+
+module.exports.executeQuery = executeQuery;

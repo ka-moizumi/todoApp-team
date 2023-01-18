@@ -4,14 +4,9 @@ import { getUserCountToEmail } from "../api/api";
 export const checkDuplicateEmail = async (email) => {
   try {
     const userCount = await getUserCountToEmail(email);
-
-    if (userCount.data[0].userCount !== 0) {
-      return false;
-    } else {
-      return true;
-    }
+    if (userCount.data[0].userCount === 0) return true;
+    return false;
   } catch (err) {
-    // 実装方法調査中
-    console.log("サーバエラーが発生しました。");
+    return "サーバエラーが発生しました。";
   }
 };

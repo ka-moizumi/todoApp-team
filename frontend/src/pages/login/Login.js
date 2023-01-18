@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { getUserInfo } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
 import { useForm } from "react-hook-form";
-import { checkDuplicateEmail } from "../../function/checkDuplicateEmail";
+import { checkMailAddressLength } from "../../function/checkMailAddressLength";
 
 export const Login = () => {
   const {
@@ -71,7 +71,7 @@ export const Login = () => {
               },
               validate: {
                 length: (value) =>
-                  checkDuplicateEmail(value) ||
+                  checkMailAddressLength(value) ||
                   "メールアドレスの形式が不正です。",
               },
             })}

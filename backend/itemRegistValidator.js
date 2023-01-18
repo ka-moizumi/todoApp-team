@@ -12,13 +12,22 @@ const checkVaridationResult = (req, res) => {
 module.exports = {
   signUp: [
     check("email")
-      .not()
-      .isEmpty()
+      .notEmpty()
       .withMessage("全ての項目の入力が必須です。")
       .isEmail()
       .withMessage("メールアドレスの形式が不正です。")
       .isLength({ min: 5, max: 253 })
-      .withMessage("メールアドレスの形式が不正です。"),
+      .withMessage("メールアドレスの形式が不正です。")
+      .custom(async (value) => {
+        try {
+          const userCount = await getUserCountToEmail(value);
+          if (userCount > 0) {
+            return Promise.reject("既に登録されたメールアドレスです。");
+          }
+        } catch (err) {
+          return Promise.reject(err);
+        }
+      }),
     check("user").not().isEmpty().withMessage("全ての項目の入力が必須です。"),
     check("password")
       .not()
@@ -30,16 +39,14 @@ module.exports = {
 
   getUser: [
     check("email")
-      .not()
-      .isEmpty()
+      .notEmpty()
       .withMessage("全ての項目の入力が必須です。")
       .isEmail()
       .withMessage("メールアドレスの形式が不正です。")
       .isLength({ min: 5, max: 253 })
       .withMessage("メールアドレスの形式が不正です。"),
     check("password")
-      .not()
-      .isEmpty()
+      .notEmpty()
       .withMessage("全ての項目の入力が必須です。")
       .isLength({ min: 5 })
       .withMessage("パスワードは5文字以上入力してください。"),
@@ -47,23 +54,17 @@ module.exports = {
 
   addTodo: [
     check("title").not().isEmpty().withMessage("全ての項目の入力が必須です。"),
-    check("content")
-      .not()
-      .isEmpty()
-      .withMessage("全ての項目の入力が必須です。"),
+    check("content").notEmpty().withMessage("全ての項目の入力が必須です。"),
     check("priority")
-      .not()
-      .isEmpty()
+      .notEmpty()
       .withMessage("全ての項目の入力が必須です。")
       .isIn([1, 2, 3]),
     check("user_id")
-      .not()
-      .isEmpty()
+      .notEmpty()
       .withMessage("全ての項目の入力が必須です。")
       .isInt(),
     check("deadline")
-      .not()
-      .isEmpty()
+      .notEmpty()
       .withMessage("全ての項目の入力が必須です。")
       .custom((value) => {
         const matches = value.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);
@@ -73,11 +74,11 @@ module.exports = {
         date.setDate(date.getDate() + 1);
 
         if (!matches || isNaN(date)) {
-          throw new Error("「YYYY/MM/DD」の正しい日付ではありません。");
+          return Promise.reject("「YYYY/MM/DD」の正しい日付ではありません。");
         }
 
         if (date < today) {
-          throw new Error("本日以降の日付にしてください。");
+          return Promise.reject("本日以降の日付にしてください。");
         }
         return true;
       }),
@@ -85,36 +86,25 @@ module.exports = {
 
   completionChange: [
     check("completion")
-      .not()
-      .isEmpty()
+      .notEmpty()
       .withMessage("全ての項目の入力が必須です。")
       .isBoolean(),
-    check("id")
-      .not()
-      .isEmpty()
-      .withMessage("全ての項目の入力が必須です。")
-      .isInt(),
+    check("id").notEmpty().withMessage("全ての項目の入力が必須です。").isInt(),
   ],
 
   editTodo: [
-    check("title").not().isEmpty().withMessage("全ての項目の入力が必須です。"),
-    check("content")
-      .not()
-      .isEmpty()
-      .withMessage("全ての項目の入力が必須です。"),
+    check("title").notEmpty().withMessage("全ての項目の入力が必須です。"),
+    check("content").notEmpty().withMessage("全ての項目の入力が必須です。"),
     check("priority")
-      .not()
-      .isEmpty()
+      .notEmpty()
       .withMessage("全ての項目の入力が必須です。")
       .isIn([1, 2, 3]),
     check("user_id")
-      .not()
-      .isEmpty()
+      .notEmpty()
       .withMessage("全ての項目の入力が必須です。")
       .isInt(),
     check("deadline")
-      .not()
-      .isEmpty()
+      .notEmpty()
       .withMessage("全ての項目の入力が必須です。")
       .custom((value) => {
         const matches = value.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);
@@ -124,17 +114,16 @@ module.exports = {
         date.setDate(date.getDate() + 1);
 
         if (!matches || isNaN(date)) {
-          throw new Error("「YYYY/MM/DD」の正しい日付ではありません。");
+          return Promise.reject("「YYYY/MM/DD」の正しい日付ではありません。");
         }
 
         if (date < today) {
-          throw new Error("本日以降の日付にしてください。");
+          return Promise.reject("本日以降の日付にしてください。");
         }
         return true;
       }),
     check("id")
-      .not()
-      .isEmpty()
+      .notEmpty()
       .withMessage("全ての項目の入力が必須です。")
       .isInt()
       .withMessage("整数で入力してください。"),
@@ -142,8 +131,7 @@ module.exports = {
 
   deleteTodo: [
     check("todoId")
-      .not()
-      .isEmpty()
+      .notEmpty()
       .withMessage("入力が必須の項目です。")
       .isInt()
       .withMessage("整数で入力してください。"),
@@ -151,8 +139,7 @@ module.exports = {
 
   clearTodos: [
     check("userId")
-      .not()
-      .isEmpty()
+      .notEmpty()
       .withMessage("入力が必須の項目です。")
       .isInt()
       .withMessage("整数で入力してください。"),
@@ -160,3 +147,16 @@ module.exports = {
 };
 
 module.exports.checkVaridationResult = checkVaridationResult;
+
+const index = require("./index");
+
+const getUserCountToEmail = async (email) => {
+  try {
+    const sql =
+      "SELECT count(id) AS userCount FROM USER WHERE mail_address = ?";
+    const results = await index.executeQuery(sql, email);
+    return results[0].userCount;
+  } catch (err) {
+    return err;
+  }
+};
