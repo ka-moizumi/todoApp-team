@@ -1,19 +1,29 @@
 import React from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import { exportedChartData } from "./constant";
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 export const TodayChart = (props) => {
   const chartData = {
-    labels: ["完了", "未完了"],
+    labels: [
+      exportedChartData.todaylabel.complete,
+      exportedChartData.todaylabel.incomplete,
+    ],
     datasets: [
       {
         label: "# of Votes",
         data: props.data,
-        backgroundColor: ["rgba(54, 162, 235, 0.2)", "rgba(255, 99, 132, 0.2)"],
-        borderColor: ["rgba(54, 162, 235, 1)", "rgba(255, 99, 132, 1)"],
-        borderWidth: 2,
+        backgroundColor: [
+          exportedChartData.color.blue,
+          exportedChartData.color.red,
+        ],
+        borderColor: [
+          exportedChartData.borderColor.blue,
+          exportedChartData.borderColor.red,
+        ],
+        borderWidth: exportedChartData.borderWidth,
       },
     ],
   };
@@ -22,15 +32,15 @@ export const TodayChart = (props) => {
     maintainAspectRatio: false,
     responsive: false,
     legend: {
-      position: "top",
+      position: exportedChartData.legendPosition,
     },
     plugins: {
       title: {
         display: true,
         font: {
-          size: 24,
+          size: exportedChartData.title.size,
         },
-        text: "今日のTodo",
+        text: exportedChartData.title.text.todayTodo,
       },
     },
   };

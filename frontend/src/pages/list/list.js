@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { getTodos, clearTodos, completionChange } from "../../api/api";
+import { exportedErrorMessage } from "../common/constant";
 import { SIndex, STitle, SWrapper } from "../create/create";
 import { SErrorMessage } from "../login/Login";
+import { exportedListData } from "./constant";
 import { ListTabs } from "./listTabs";
 
 export const List = () => {
@@ -18,9 +20,7 @@ export const List = () => {
       const result = await getTodos(userData.id);
       setTodos(result.data);
     } catch (err) {
-      setErrorMessage(
-        `Todoの取得ができません。エラーコード:${err.response.status}`
-      );
+      setErrorMessage(exportedErrorMessage.getTodos(err.response.status));
     }
   };
 
@@ -29,9 +29,7 @@ export const List = () => {
       await clearTodos(userData.id);
       resTodos();
     } catch (err) {
-      setErrorMessage(
-        `Todoの削除ができません。エラーコード:${err.response.status}`
-      );
+      setErrorMessage(exportedErrorMessage.deleteTodos(err.response.status));
     }
   };
 
@@ -52,9 +50,7 @@ export const List = () => {
       await completionChange(!todo.completion, todo.id);
       resTodos();
     } catch (err) {
-      setErrorMessage(
-        `ステータス更新ができません。エラーコード:${err.response.status}`
-      );
+      setErrorMessage(exportedErrorMessage.changeStatus(err.response.status));
     }
   };
 
@@ -69,8 +65,10 @@ export const List = () => {
       {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
       <STodosArea>
         <SIndex>
-          <STitle>List</STitle>
-          <SDeleteButton onClick={onClickClear}>全件削除</SDeleteButton>
+          <STitle>{exportedListData.display.title}</STitle>
+          <SDeleteButton onClick={onClickClear}>
+            {exportedListData.display.clear}
+          </SDeleteButton>
         </SIndex>
         <ListTabs
           todos={todos}

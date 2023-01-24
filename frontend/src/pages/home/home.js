@@ -5,6 +5,7 @@ import { AllChart } from "./allChart";
 import { TodayChart } from "./todayChart";
 import { getTodosDate } from "../../api/api";
 import { SErrorMessage } from "../login/Login";
+import { exportedErrorMessage } from "../common/constant";
 
 export const Home = () => {
   const userData = useMemo(() => {
@@ -71,9 +72,7 @@ export const Home = () => {
       setAllChartData(separatedCartData[0]);
       setTodayChartData(separatedCartData[1]);
     } catch (err) {
-      setErrorMessage(
-        `チャートを表示できません。エラーコード：${err.response.status}`
-      );
+      setErrorMessage(exportedErrorMessage.displayChart(err.response.status));
     }
   }, [userData]);
 

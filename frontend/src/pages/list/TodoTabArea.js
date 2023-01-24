@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { exportedListData } from "./constant";
 
 export const TodoTabArea = (props) => {
   const { compIndex, onClickEdit, onClickCompleteChange, todos } = props;
@@ -14,11 +15,11 @@ export const TodoTabArea = (props) => {
     <STodos>
       <thead>
         <SHeaderTr>
-          <SIdTh>ID</SIdTh>
-          <STitleTh>内容</STitleTh>
-          <SContentTh>詳細</SContentTh>
-          <SDeadlineTh>期限</SDeadlineTh>
-          <SAdminTh>管理</SAdminTh>
+          <SIdTh>{exportedListData.display.id}</SIdTh>
+          <STitleTh>{exportedListData.display.content}</STitleTh>
+          <SContentTh>{exportedListData.display.detail}</SContentTh>
+          <SDeadlineTh>{exportedListData.display.deadline}</SDeadlineTh>
+          <SAdminTh>{exportedListData.display.admin}</SAdminTh>
         </SHeaderTr>
       </thead>
       <tbody>
@@ -31,15 +32,15 @@ export const TodoTabArea = (props) => {
               <td>{todo.deadline}</td>
               <td>
                 <SEditButton onClick={() => onClickEdit(todo)}>
-                  編集
+                  {exportedListData.display.edit}
                 </SEditButton>
                 {compIndex === 0 ? (
                   <SCompleteButton onClick={() => onClickCompleteChange(todo)}>
-                    完了
+                    {exportedListData.display.complete}
                   </SCompleteButton>
                 ) : (
                   <SBackButton onClick={() => onClickCompleteChange(todo)}>
-                    戻す
+                    {exportedListData.display.return}
                   </SBackButton>
                 )}
               </td>

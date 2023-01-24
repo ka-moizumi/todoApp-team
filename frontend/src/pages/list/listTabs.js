@@ -1,33 +1,33 @@
 import { useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-
 import "react-tabs/style/react-tabs.css";
+import { exportedListData } from "./constant";
 import { SPrimaryButton, TodoTabArea } from "./TodoTabArea";
 
 export const ListTabs = (props) => {
   const { todos, setTodos, onClickCompleteChange, onClickEdit } = props;
 
-  const [reverseToggle, setReverseToggle] = useState(false);
+  const [sortOrder, setsortOrder] = useState(false);
 
   // 順番を逆転
   const onClickReverse = () => {
     const reversedTodos = [...todos].reverse();
     setTodos(reversedTodos);
-    setReverseToggle(!reverseToggle);
+    setsortOrder(!sortOrder);
   };
 
   // ソート
   const onClickSort = (e) => {
-    const value = e.target.value;
+    const sort = e.target.value;
     let todoType;
     todos.sort((a, b) => {
-      if (value === "0") {
+      if (sort === exportedListData.sortItem.id) {
         todoType = [a.id, b.id];
         return todoType[0] - todoType[1];
-      } else if (value === "1") {
+      } else if (sort === exportedListData.sortItem.content) {
         todoType = [a.title, b.title];
         return todoType[0] < todoType[1] ? -1 : 1;
-      } else if (value === "2") {
+      } else if (sort === exportedListData.sortItem.detail) {
         todoType = [a.content, b.content];
         return todoType[0] < todoType[1] ? -1 : 1;
       } else {
@@ -35,7 +35,7 @@ export const ListTabs = (props) => {
         return todoType[0] - todoType[1];
       }
     });
-    if (reverseToggle) {
+    if (sortOrder) {
       const newTodos = [...todos].reverse();
       setTodos(newTodos);
     } else {
@@ -47,16 +47,26 @@ export const ListTabs = (props) => {
   return (
     <Tabs>
       <TabList>
-        <Tab>未完了</Tab>
-        <Tab>完了</Tab>
+        <Tab>{exportedListData.display.incomplete}</Tab>
+        <Tab>{exportedListData.display.complete}</Tab>
         <SPrimaryButton onClick={onClickReverse}>
-          {reverseToggle ? "降順" : "昇順"}
+          {sortOrder
+            ? exportedListData.sortOrder.desc
+            : exportedListData.sortOrder.asc}
         </SPrimaryButton>
         <select name="sort" onChange={(e) => onClickSort(e)}>
-          <option value="0">ID</option>
-          <option value="1">内容</option>
-          <option value="2">詳細</option>
-          <option value="3">期限</option>
+          <option value={exportedListData.sortItem.id}>
+            {exportedListData.display.id}
+          </option>
+          <option value={exportedListData.sortItem.content}>
+            {exportedListData.display.content}
+          </option>
+          <option value={exportedListData.sortItem.detail}>
+            {exportedListData.display.detail}
+          </option>
+          <option value={exportedListData.sortItem.deadline}>
+            {exportedListData.display.deadline}
+          </option>
         </select>
       </TabList>
       <TabPanel>

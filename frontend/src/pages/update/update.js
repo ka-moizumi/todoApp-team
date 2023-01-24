@@ -11,6 +11,7 @@ import { TodoInputArea } from "../common/TodoInputArea";
 import { useInput } from "../../hooks/useInput";
 import { SPrimaryButton } from "../list/TodoTabArea";
 import { SErrorMessage } from "../login/Login";
+import { exportedErrorMessage } from "../common/constant";
 
 export const Update = () => {
   const history = useHistory();
@@ -39,9 +40,7 @@ export const Update = () => {
       );
       history.goBack();
     } catch (err) {
-      setErrorMessage(
-        `Todoの更新ができません。エラーコード:${err.response.status}`
-      );
+      setErrorMessage(exportedErrorMessage.updateTodo(err.response.status));
     }
   };
 
@@ -50,9 +49,7 @@ export const Update = () => {
       await deleteTodo(id);
       history.goBack();
     } catch (err) {
-      setErrorMessage(
-        `Todoの削除ができません。エラーコード:${err.response.status}`
-      );
+      setErrorMessage(exportedErrorMessage.deleteTodos(err.response.status));
     }
   };
 
