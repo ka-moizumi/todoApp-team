@@ -6,6 +6,7 @@ import { TodayChart } from "./todayChart";
 import { getChartData } from "../../api/api";
 import { SErrorMessage } from "../login/Login";
 import { exportedErrorMessage } from "../common/constant";
+import { rateOfAcheivement } from "../../function/rateOfAcheivement";
 
 export const Home = () => {
   const userData = useMemo(() => {
@@ -104,13 +105,9 @@ export const Home = () => {
         ) : (
           <>
             <TodayChart data={todayChartData} />
-            <SPercentComp>
-              {Math.trunc(
-                (todayChartData[0] / (todayChartData[0] + todayChartData[1])) *
-                  100
-              )}
-              %
-            </SPercentComp>
+            <SRateOfAcheivement>
+              {rateOfAcheivement(todayChartData)}
+            </SRateOfAcheivement>
           </>
         )}
       </SChartWapper>
@@ -138,7 +135,7 @@ const SNoneChartmessage = styled.div`
   margin-top: 200px;
 `;
 
-const SPercentComp = styled.span`
+const SRateOfAcheivement = styled.span`
   font-size: 36px;
   color: #666;
   position: absolute;
