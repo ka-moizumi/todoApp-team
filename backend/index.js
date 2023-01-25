@@ -51,7 +51,7 @@ app.get(
 );
 
 // Todoを取得
-app.get(`/getTodos/:userId`, async (req, res) => {
+app.get(`/todos/:userId`, async (req, res) => {
   try {
     const sql =
       "SELECT id, title, content, completion, priority, DATE_FORMAT(deadline, '%m/%d') AS deadline FROM TASK WHERE user_id = ?";

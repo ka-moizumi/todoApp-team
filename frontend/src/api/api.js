@@ -15,7 +15,7 @@ export const getUserInfo = async (userData) => {
 
 // Todoを取得
 export const getTodos = async (userId) => {
-  return await axios.get(`/getTodos/${userId}`);
+  return await axios.get(`/todos/${userId}`);
 };
 
 //Todoの日付を取得
