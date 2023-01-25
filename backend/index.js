@@ -63,11 +63,11 @@ app.get(`/getTodos/:userId`, async (req, res) => {
   }
 });
 
-// Todoの日付を取得
-app.get("/getTodosDate", async (req, res) => {
+// Todoの期限と完了フラグを取得
+app.get("/getChartData/:userId", async (req, res) => {
   try {
     const sql = "SELECT completion, deadline FROM TASK WHERE user_id = ?";
-    const placeholder = req.query.user_id;
+    const placeholder = req.params.userId;
     const results = await executeQuery(sql, placeholder);
     res.send(results);
   } catch (err) {

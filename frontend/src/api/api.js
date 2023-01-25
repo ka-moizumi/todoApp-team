@@ -14,13 +14,13 @@ export const getUserInfo = async (userData) => {
 };
 
 // Todoを取得
-export const getTodos = async (user_id) => {
-  return await axios.get(`/getTodos/${user_id}`);
+export const getTodos = async (userId) => {
+  return await axios.get(`/getTodos/${userId}`);
 };
 
 //Todoの日付を取得
-export const getTodosDate = async (user_id) => {
-  return await axios.get(`/getTodosDate`, { params: { user_id } });
+export const getChartData = async (userId) => {
+  return await axios.get(`/getChartData/${userId}`);
 };
 
 // メールアドレスが既に登録済みか確認
@@ -45,8 +45,8 @@ export const deleteTodo = async (id) => {
 };
 
 // Todoを全削除
-export const clearTodos = async (user_id) => {
-  await axios.delete(`/clearTodos/${user_id}`);
+export const clearTodos = async (userId) => {
+  await axios.delete(`/clearTodos/${userId}`);
 };
 
 // 完了・未完了のステータス切り替え

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { SWrapper } from "../create/create";
 import { AllChart } from "./allChart";
 import { TodayChart } from "./todayChart";
-import { getTodosDate } from "../../api/api";
+import { getChartData } from "../../api/api";
 import { SErrorMessage } from "../login/Login";
 import { exportedErrorMessage } from "../common/constant";
 
@@ -65,7 +65,7 @@ export const Home = () => {
   // Todoの数を取得
   const countTodoNumber = useCallback(async () => {
     try {
-      const chartData = await getTodosDate(userData.id);
+      const chartData = await getChartData(userData.id);
       const separatedCartData = separateData(chartData);
 
       // 返ってきたTodo数をuseStateで管理
