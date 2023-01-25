@@ -54,7 +54,7 @@ app.get(
 app.get(`/todos/:userId`, async (req, res) => {
   try {
     const sql =
-      "SELECT id, title, content, completion, priority, DATE_FORMAT(deadline, '%m/%d') AS deadline FROM TASK WHERE user_id = ?";
+      "SELECT id, title, content, completion, priority, DATE_FORMAT(deadline, '%m/%d') AS deadline FROM TASK WHERE user_id = ? ORDER BY id ASC";
     const placeholder = req.params.userId;
     const results = await executeQuery(sql, placeholder);
     res.send(results);
