@@ -23,38 +23,38 @@ export const Home = () => {
     const getData = res.data;
 
     // 期限ごとにTodoを分ける
-    const highLimitTodos = getData.filter((num) => {
+    const highPriorityTodos = getData.filter((num) => {
       const formatGetData = new Date(num.deadline);
-      const limitTime = formatGetData.setDate(formatGetData.getDate() + 1);
-      return limitTime - today < 86400000 && limitTime - today > 0;
+      const deadline = formatGetData.setDate(formatGetData.getDate() + 1);
+      return deadline - today < 86400000 && deadline - today > 0;
     });
 
-    const normalLimitTodos = getData.filter((num) => {
+    const normalPriorityTodos = getData.filter((num) => {
       const formatGetData = new Date(num.deadline);
-      const limitTime = formatGetData.setDate(formatGetData.getDate() + 1);
-      return limitTime - today > 86400000 && limitTime - today < 259200000;
+      const deadline = formatGetData.setDate(formatGetData.getDate() + 1);
+      return deadline - today > 86400000 && deadline - today < 259200000;
     });
 
-    const lowLimitTodos = getData.filter((num) => {
+    const lowPriorityTodos = getData.filter((num) => {
       const formatGetData = new Date(num.deadline);
-      const limitTime = formatGetData.setDate(formatGetData.getDate() + 1);
-      return limitTime - today > 259200000;
+      const deadline = formatGetData.setDate(formatGetData.getDate() + 1);
+      return deadline - today > 259200000;
     });
 
     // 完了・未完了を分ける
-    const completeTodos = highLimitTodos.filter((num) => {
+    const completeTodos = highPriorityTodos.filter((num) => {
       return num.completion === 1;
     });
 
-    const imCompleteTodos = highLimitTodos.filter((num) => {
+    const imCompleteTodos = highPriorityTodos.filter((num) => {
       return num.completion === 0;
     });
 
     //分けたTodo数を配列にする
     const limitTodos = [
-      highLimitTodos.length,
-      normalLimitTodos.length,
-      lowLimitTodos.length,
+      highPriorityTodos.length,
+      normalPriorityTodos.length,
+      lowPriorityTodos.length,
     ];
 
     const countCompleteTodos = [completeTodos.length, imCompleteTodos.length];
