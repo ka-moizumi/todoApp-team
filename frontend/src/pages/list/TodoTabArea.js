@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { exportedListData } from "./constant";
 
 export const TodoTabArea = (props) => {
-  const { compIndex, onClickEdit, onClickCompleteChange, todos } = props;
+  const { completionStatus, onClickEdit, onClickCompleteChange, todos } = props;
 
   const todoList = (index) => {
     const dividedTodos = todos.filter((todo) => {
@@ -23,7 +23,7 @@ export const TodoTabArea = (props) => {
         </SHeaderTr>
       </thead>
       <tbody>
-        {todoList(compIndex).map((todo) => {
+        {todoList(completionStatus).map((todo) => {
           return (
             <STodo key={todo.id}>
               <td>{todo.id}</td>
@@ -34,7 +34,7 @@ export const TodoTabArea = (props) => {
                 <SEditButton onClick={() => onClickEdit(todo)}>
                   {exportedListData.display.edit}
                 </SEditButton>
-                {compIndex === 0 ? (
+                {completionStatus === 0 ? (
                   <SCompleteButton onClick={() => onClickCompleteChange(todo)}>
                     {exportedListData.display.complete}
                   </SCompleteButton>

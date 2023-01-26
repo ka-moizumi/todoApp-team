@@ -71,7 +71,7 @@ export const ListTabs = (props) => {
       </TabList>
       <TabPanel>
         <TodoTabArea
-          compIndex={0}
+          completionStatus={0}
           todos={todos}
           onClickCompleteChange={onClickCompleteChange}
           onClickEdit={onClickEdit}
@@ -79,7 +79,7 @@ export const ListTabs = (props) => {
       </TabPanel>
       <TabPanel>
         <TodoTabArea
-          compIndex={1}
+          completionStatus={1}
           todos={todos}
           onClickCompleteChange={onClickCompleteChange}
           onClickEdit={onClickEdit}
