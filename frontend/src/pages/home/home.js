@@ -1,85 +1,19 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
 import { SWrapper } from "../create/create";
 import { AllChart } from "./allChart";
 import { TodayChart } from "./todayChart";
-import { getChartData } from "../../api/api";
 import { SErrorMessage } from "../login/Login";
-import { exportedErrorMessage } from "../common/constant";
 import { rateOfAcheivement } from "../../function/rateOfAcheivement";
+import { useCountTodoNumber } from "../../hooks/useCountTodoNumber";
 
 export const Home = () => {
   const userData = useMemo(() => {
     return JSON.parse(sessionStorage.getItem("userData"));
   }, []);
 
-  const [allChartData, setAllChartData] = useState([0, 0, 0]);
-  const [todayChartData, setTodayChartData] = useState([0, 0]);
-
-  const [errorMessage, setErrorMessage] = useState();
-
-  //取得したTodo数を分けて返却
-  const separateData = (res) => {
-    const today = new Date();
-    const getData = res.data;
-
-    // 期限ごとにTodoを分ける
-    const highPriorityTodos = getData.filter((num) => {
-      const formatGetData = new Date(num.deadline);
-      const deadline = formatGetData.setDate(formatGetData.getDate() + 1);
-      return deadline - today < 86400000 && deadline - today > 0;
-    });
-
-    const normalPriorityTodos = getData.filter((num) => {
-      const formatGetData = new Date(num.deadline);
-      const deadline = formatGetData.setDate(formatGetData.getDate() + 1);
-      return deadline - today > 86400000 && deadline - today < 259200000;
-    });
-
-    const lowPriorityTodos = getData.filter((num) => {
-      const formatGetData = new Date(num.deadline);
-      const deadline = formatGetData.setDate(formatGetData.getDate() + 1);
-      return deadline - today > 259200000;
-    });
-
-    // 完了・未完了を分ける
-    const completeTodos = highPriorityTodos.filter((num) => {
-      return num.completion === 1;
-    });
-
-    const imCompleteTodos = highPriorityTodos.filter((num) => {
-      return num.completion === 0;
-    });
-
-    //分けたTodo数を配列にする
-    const limitTodos = [
-      highPriorityTodos.length,
-      normalPriorityTodos.length,
-      lowPriorityTodos.length,
-    ];
-
-    const countCompleteTodos = [completeTodos.length, imCompleteTodos.length];
-
-    return [limitTodos, countCompleteTodos];
-  };
-
-  // Todoの数を取得
-  const countTodoNumber = useCallback(async () => {
-    try {
-      const chartData = await getChartData(userData.id);
-      const separatedCartData = separateData(chartData);
-
-      // 返ってきたTodo数をuseStateで管理
-      setAllChartData(separatedCartData[0]);
-      setTodayChartData(separatedCartData[1]);
-    } catch (err) {
-      setErrorMessage(exportedErrorMessage.displayChart(err.response.status));
-    }
-  }, [userData]);
-
-  useEffect(() => {
-    countTodoNumber();
-  }, [setTodayChartData, countTodoNumber]);
+  const { allChartData, todayChartData, errorMessage } =
+    useCountTodoNumber(userData);
 
   return (
     <SWrapper width={"600px"}>
