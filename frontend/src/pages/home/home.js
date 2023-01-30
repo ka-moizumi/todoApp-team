@@ -5,7 +5,7 @@ import { AllChart } from "./allChart";
 import { TodayChart } from "./todayChart";
 import { SErrorMessage } from "../login/Login";
 import { rateOfAcheivement } from "../../function/rateOfAcheivement";
-import { useCountTodoNumber } from "../../hooks/useCountTodoNumber";
+import { useCountTodos } from "../../hooks/useCountTodos";
 
 export const Home = () => {
   const userData = useMemo(() => {
@@ -13,7 +13,7 @@ export const Home = () => {
   }, []);
 
   const { allChartData, todayChartData, errorMessage } =
-    useCountTodoNumber(userData);
+    useCountTodos(userData);
 
   return (
     <SWrapper width={"600px"}>

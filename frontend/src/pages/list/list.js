@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { getTodos, clearTodos, completionChange } from "../../api/api";
-import { exportedErrorMessage } from "../common/constant";
+import { ERROR_MESSAGES } from "../common/constant";
 import { SIndex, STitle, SWrapper } from "../create/create";
 import { SErrorMessage } from "../login/Login";
 import { exportedListData } from "./constant";
@@ -20,7 +20,7 @@ export const List = () => {
       const result = await getTodos(userData.id);
       setTodos(result.data);
     } catch (err) {
-      setErrorMessage(exportedErrorMessage.getTodos(err.response.status));
+      setErrorMessage(ERROR_MESSAGES.getTodos(err.response.status));
     }
   };
 
@@ -29,7 +29,7 @@ export const List = () => {
       await clearTodos(userData.id);
       resTodos();
     } catch (err) {
-      setErrorMessage(exportedErrorMessage.deleteTodos(err.response.status));
+      setErrorMessage(ERROR_MESSAGES.deleteTodos(err.response.status));
     }
   };
 
@@ -50,7 +50,7 @@ export const List = () => {
       await completionChange(!todo.completion, todo.id);
       resTodos();
     } catch (err) {
-      setErrorMessage(exportedErrorMessage.changeStatus(err.response.status));
+      setErrorMessage(ERROR_MESSAGES.changeStatus(err.response.status));
     }
   };
 

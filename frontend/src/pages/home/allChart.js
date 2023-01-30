@@ -1,32 +1,32 @@
 import React from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { exportedChartData } from "./constant";
+import { CONSTANT_DATA } from "./constant";
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 export const AllChart = (props) => {
   const chartData = {
     labels: [
-      exportedChartData.allLabel.today,
-      exportedChartData.allLabel.threeDays,
-      exportedChartData.allLabel.other,
+      CONSTANT_DATA.allLabel.today,
+      CONSTANT_DATA.allLabel.threeDays,
+      CONSTANT_DATA.allLabel.other,
     ],
     datasets: [
       {
         label: "# of Votes",
         data: props.data,
         backgroundColor: [
-          exportedChartData.color.red,
-          exportedChartData.color.blue,
-          exportedChartData.color.yellow,
+          CONSTANT_DATA.color.red,
+          CONSTANT_DATA.color.blue,
+          CONSTANT_DATA.color.yellow,
         ],
         borderColor: [
-          exportedChartData.borderColor.red,
-          exportedChartData.borderColor.blue,
-          exportedChartData.borderColor.yellow,
+          CONSTANT_DATA.borderColor.red,
+          CONSTANT_DATA.borderColor.blue,
+          CONSTANT_DATA.borderColor.yellow,
         ],
-        borderWidth: exportedChartData.borderWidth,
+        borderWidth: CONSTANT_DATA.borderWidth,
       },
     ],
   };
@@ -36,14 +36,14 @@ export const AllChart = (props) => {
     responsive: false,
     plugins: {
       legend: {
-        position: exportedChartData.legendPosition,
+        position: CONSTANT_DATA.legendPosition,
       },
       title: {
         display: true,
         font: {
-          size: exportedChartData.title.size,
+          size: CONSTANT_DATA.title.size,
         },
-        text: exportedChartData.title.text.allTodos,
+        text: CONSTANT_DATA.title.text.allTodos,
       },
     },
   };

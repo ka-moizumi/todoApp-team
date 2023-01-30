@@ -8,7 +8,7 @@ import { prioritySelect } from "../../function/prioritySelect";
 import { TodoInputArea } from "../common/TodoInputArea";
 import { useInput } from "../../hooks/useInput";
 import { SErrorMessage } from "../login/Login";
-import { exportedErrorMessage } from "../common/constant";
+import { ERROR_MESSAGES } from "../common/constant";
 
 export const Create = () => {
   const history = useHistory();
@@ -34,7 +34,7 @@ export const Create = () => {
       );
       history.push(`/list/${userData["id"]}`);
     } catch (err) {
-      setErrorMessage(exportedErrorMessage.registerTodo(err.response.status));
+      setErrorMessage(ERROR_MESSAGES.registerTodo(err.response.status));
     }
   };
 

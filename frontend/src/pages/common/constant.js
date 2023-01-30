@@ -1,4 +1,4 @@
-export const exportedErrorMessage = {
+export const ERROR_MESSAGES = {
   getTodos: (errorCode) => `Todoの取得ができません。エラーコード:${errorCode}`,
   registerTodo: (errorCode) =>
     `Todoの登録ができません。エラーコード:${errorCode}`,

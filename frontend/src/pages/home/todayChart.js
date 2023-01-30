@@ -1,29 +1,26 @@
 import React from "react";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import { exportedChartData } from "./constant";
+import { CONSTANT_DATA } from "./constant";
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 export const TodayChart = (props) => {
   const chartData = {
     labels: [
-      exportedChartData.todaylabel.complete,
-      exportedChartData.todaylabel.incomplete,
+      CONSTANT_DATA.todaylabel.complete,
+      CONSTANT_DATA.todaylabel.incomplete,
     ],
     datasets: [
       {
         label: "# of Votes",
         data: props.data,
-        backgroundColor: [
-          exportedChartData.color.blue,
-          exportedChartData.color.red,
-        ],
+        backgroundColor: [CONSTANT_DATA.color.blue, CONSTANT_DATA.color.red],
         borderColor: [
-          exportedChartData.borderColor.blue,
-          exportedChartData.borderColor.red,
+          CONSTANT_DATA.borderColor.blue,
+          CONSTANT_DATA.borderColor.red,
         ],
-        borderWidth: exportedChartData.borderWidth,
+        borderWidth: CONSTANT_DATA.borderWidth,
       },
     ],
   };
@@ -32,15 +29,15 @@ export const TodayChart = (props) => {
     maintainAspectRatio: false,
     responsive: false,
     legend: {
-      position: exportedChartData.legendPosition,
+      position: CONSTANT_DATA.legendPosition,
     },
     plugins: {
       title: {
         display: true,
         font: {
-          size: exportedChartData.title.size,
+          size: CONSTANT_DATA.title.size,
         },
-        text: exportedChartData.title.text.todayTodo,
+        text: CONSTANT_DATA.title.text.todayTodo,
       },
     },
   };

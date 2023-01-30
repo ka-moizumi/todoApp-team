@@ -11,7 +11,7 @@ import { TodoInputArea } from "../common/TodoInputArea";
 import { useInput } from "../../hooks/useInput";
 import { SPrimaryButton } from "../list/TodoTabArea";
 import { SErrorMessage } from "../login/Login";
-import { exportedErrorMessage } from "../common/constant";
+import { ERROR_MESSAGES } from "../common/constant";
 
 export const Update = () => {
   const history = useHistory();
@@ -40,7 +40,7 @@ export const Update = () => {
       );
       history.goBack();
     } catch (err) {
-      setErrorMessage(exportedErrorMessage.updateTodo(err.response.status));
+      setErrorMessage(ERROR_MESSAGES.updateTodo(err.response.status));
     }
   };
 
@@ -49,7 +49,7 @@ export const Update = () => {
       await deleteTodo(id);
       history.goBack();
     } catch (err) {
-      setErrorMessage(exportedErrorMessage.deleteTodos(err.response.status));
+      setErrorMessage(ERROR_MESSAGES.deleteTodos(err.response.status));
     }
   };
 

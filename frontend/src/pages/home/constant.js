@@ -1,4 +1,4 @@
-export const exportedChartData = {
+export const CONSTANT_DATA = {
   allLabel: { today: "今日中", threeDays: "3日以内", other: "その他" },
   todaylabel: { complete: "完了", incomplete: "未完了" },
   color: {
