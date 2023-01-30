@@ -5,8 +5,16 @@ import { ERROR_MESSAGES } from "../pages/common/constant";
 
 // Todoの数を取得
 export const useCountTodos = (userData) => {
-  const [allChartData, setAllChartData] = useState([0, 0, 0]);
-  const [todayChartData, setTodayChartData] = useState([0, 0]);
+  const [allChartData, setAllChartData] = useState({
+    highPriorityTodos: "",
+    normalPriorityTodos: "",
+    lowPriorityTodos: "",
+  });
+
+  const [todayChartData, setTodayChartData] = useState({
+    completeTodos: "",
+    incompleteTodos: "",
+  });
 
   const [errorMessage, setErrorMessage] = useState();
 
@@ -15,10 +23,9 @@ export const useCountTodos = (userData) => {
     try {
       const chartData = await getChartData(userData.id);
       const separatedChartData = groupTodosByDeadline(chartData);
-
       // 返ってきたTodo数をuseStateで管理
-      setAllChartData(separatedChartData[0]);
-      setTodayChartData(separatedChartData[1]);
+      setAllChartData(separatedChartData.limitTodos);
+      setTodayChartData(separatedChartData.countCompleteTodos);
     } catch (err) {
       setErrorMessage(ERROR_MESSAGES.displayChart(err.response.status));
     }

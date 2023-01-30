@@ -14,7 +14,7 @@ export const TodayChart = (props) => {
     datasets: [
       {
         label: "# of Votes",
-        data: props.data,
+        data: [props.data.completeTodos, props.data.incompleteTodos],
         backgroundColor: [CONSTANT_DATA.color.blue, CONSTANT_DATA.color.red],
         borderColor: [
           CONSTANT_DATA.borderColor.blue,

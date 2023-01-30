@@ -19,9 +19,9 @@ export const Home = () => {
     <SWrapper width={"600px"}>
       {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
       <SChartWapper>
-        {allChartData[0] === 0 &&
-        allChartData[1] === 0 &&
-        allChartData[2] === 0 ? (
+        {allChartData.highPriorityTodos === 0 &&
+        allChartData.normalPriorityTodos === 0 &&
+        allChartData.lowPriorityTodos === 0 ? (
           <>
             <SChartTitle>全てのTodo</SChartTitle>
             <SNoneChartmessage>なし</SNoneChartmessage>
@@ -31,7 +31,8 @@ export const Home = () => {
         )}
       </SChartWapper>
       <SChartWapper>
-        {todayChartData[0] === 0 && todayChartData[1] === 0 ? (
+        {todayChartData.incompleteTodos === 0 &&
+        todayChartData.completeTodos === 0 ? (
           <>
             <SChartTitle>今日のTodo</SChartTitle>
             <SNoneChartmessage>なし</SNoneChartmessage>

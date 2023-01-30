@@ -15,7 +15,11 @@ export const AllChart = (props) => {
     datasets: [
       {
         label: "# of Votes",
-        data: props.data,
+        data: [
+          props.data.highPriorityTodos,
+          props.data.normalPriorityTodos,
+          props.data.lowPriorityTodos,
+        ],
         backgroundColor: [
           CONSTANT_DATA.color.red,
           CONSTANT_DATA.color.blue,
