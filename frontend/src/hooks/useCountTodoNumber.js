@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { getChartData } from "../api/api";
-import { separateTodos } from "../function/separateTodos";
+import { groupTodosByDeadline } from "../function/groupTodosByDeadline";
 import { exportedErrorMessage } from "../pages/common/constant";
 
 // Todoの数を取得
@@ -14,11 +14,11 @@ export const useCountTodoNumber = (userData) => {
   const countTodoNumber = useCallback(async () => {
     try {
       const chartData = await getChartData(userData.id);
-      const separatedCartData = separateTodos(chartData);
+      const separatedChartData = groupTodosByDeadline(chartData);
 
       // 返ってきたTodo数をuseStateで管理
-      setAllChartData(separatedCartData[0]);
-      setTodayChartData(separatedCartData[1]);
+      setAllChartData(separatedChartData[0]);
+      setTodayChartData(separatedChartData[1]);
     } catch (err) {
       setErrorMessage(exportedErrorMessage.displayChart(err.response.status));
     }
