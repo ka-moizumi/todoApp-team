@@ -5,7 +5,7 @@ import { getTodos, clearTodos, completionChange } from "../../api/api";
 import { ERROR_MESSAGES } from "../common/constant";
 import { SIndex, STitle, SWrapper } from "../create/create";
 import { SErrorMessage } from "../login/Login";
-import { exportedListData } from "./constant";
+import { CONSTANT_DATA } from "./constant";
 import { ListTabs } from "./listTabs";
 
 export const List = () => {
@@ -65,9 +65,9 @@ export const List = () => {
       {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
       <STodosArea>
         <SIndex>
-          <STitle>{exportedListData.display.title}</STitle>
+          <STitle>{CONSTANT_DATA.display.title}</STitle>
           <SDeleteButton onClick={onClickClear}>
-            {exportedListData.display.clear}
+            {CONSTANT_DATA.display.clear}
           </SDeleteButton>
         </SIndex>
         <ListTabs

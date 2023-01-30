@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { exportedListData } from "./constant";
+import { CONSTANT_DATA } from "./constant";
 
 export const TodoTabArea = (props) => {
   const { completionStatus, onClickEdit, onClickCompleteChange, todos } = props;
@@ -15,11 +15,11 @@ export const TodoTabArea = (props) => {
     <STodos>
       <thead>
         <SHeaderTr>
-          <SIdTh>{exportedListData.display.id}</SIdTh>
-          <STitleTh>{exportedListData.display.content}</STitleTh>
-          <SContentTh>{exportedListData.display.detail}</SContentTh>
-          <SDeadlineTh>{exportedListData.display.deadline}</SDeadlineTh>
-          <SAdminTh>{exportedListData.display.admin}</SAdminTh>
+          <SIdTh>{CONSTANT_DATA.display.id}</SIdTh>
+          <STitleTh>{CONSTANT_DATA.display.content}</STitleTh>
+          <SContentTh>{CONSTANT_DATA.display.detail}</SContentTh>
+          <SDeadlineTh>{CONSTANT_DATA.display.deadline}</SDeadlineTh>
+          <SAdminTh>{CONSTANT_DATA.display.admin}</SAdminTh>
         </SHeaderTr>
       </thead>
       <tbody>
@@ -32,15 +32,16 @@ export const TodoTabArea = (props) => {
               <td>{todo.deadline}</td>
               <td>
                 <SEditButton onClick={() => onClickEdit(todo)}>
-                  {exportedListData.display.edit}
+                  {CONSTANT_DATA.display.edit}
                 </SEditButton>
-                {completionStatus === 0 ? (
+                {completionStatus ===
+                CONSTANT_DATA.display.status.incomplete ? (
                   <SCompleteButton onClick={() => onClickCompleteChange(todo)}>
-                    {exportedListData.display.complete}
+                    {CONSTANT_DATA.display.complete}
                   </SCompleteButton>
                 ) : (
                   <SBackButton onClick={() => onClickCompleteChange(todo)}>
-                    {exportedListData.display.return}
+                    {CONSTANT_DATA.display.return}
                   </SBackButton>
                 )}
               </td>
