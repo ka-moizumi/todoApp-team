@@ -4,7 +4,7 @@ import { SWrapper } from "../create/create";
 import { AllChart } from "./allChart";
 import { TodayChart } from "./todayChart";
 import { SErrorMessage } from "../login/Login";
-import { rateOfAcheivement } from "../../function/rateOfAcheivement";
+import { calcAchievementRate } from "../../function/calcAchievementRate";
 import { useCountTodos } from "../../hooks/useCountTodos";
 
 export const Home = () => {
@@ -40,7 +40,7 @@ export const Home = () => {
           <>
             <TodayChart data={todayChartData} />
             <SRateOfAcheivement>
-              {rateOfAcheivement(todayChartData)}
+              {calcAchievementRate(todayChartData)}
             </SRateOfAcheivement>
           </>
         )}
