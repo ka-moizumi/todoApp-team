@@ -9,6 +9,7 @@ import { TodoInputArea } from "../common/TodoInputArea";
 import { useInput } from "../../hooks/useInput";
 import { SErrorMessage } from "../login/Login";
 import { ERROR_MESSAGES } from "../common/constant";
+import { CONSTANT_DATA } from "./constant";
 
 export const Create = () => {
   const history = useHistory();
@@ -29,10 +30,10 @@ export const Create = () => {
         text.text,
         contentText.text,
         prioritySelect(startDate, today),
-        userData["id"],
+        userData.id,
         formatDate(startDate)
       );
-      history.push(`/list/${userData["id"]}`);
+      history.push(`/list/${userData.id}`);
     } catch (err) {
       setErrorMessage(ERROR_MESSAGES.registerTodo(err.response.status));
     }
@@ -49,14 +50,16 @@ export const Create = () => {
       {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
       <SInputArea>
         <SIndex>
-          <STitle>Create</STitle>
-          <SAddButton onClick={onClickAdd}>+</SAddButton>
+          <STitle>{CONSTANT_DATA.display.title}</STitle>
+          <SAddButton onClick={onClickAdd}>
+            {CONSTANT_DATA.display.submit}
+          </SAddButton>
         </SIndex>
         <TodoInputArea
-          textPlaceholder={"Todoを入力"}
+          textPlaceholder={CONSTANT_DATA.display.content}
           text={text.text}
           textOnChange={text.textOnChange}
-          contentTextPlaceholder={"詳細を入力"}
+          contentTextPlaceholder={CONSTANT_DATA.display.detail}
           contentText={contentText.text}
           contentTextOnChange={contentText.textOnChange}
         />

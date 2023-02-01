@@ -12,6 +12,7 @@ import { useInput } from "../../hooks/useInput";
 import { SPrimaryButton } from "../list/TodoTabArea";
 import { SErrorMessage } from "../login/Login";
 import { ERROR_MESSAGES } from "../common/constant";
+import { CONSTANT_DATA } from "./constant";
 
 export const Update = () => {
   const history = useHistory();
@@ -34,7 +35,7 @@ export const Update = () => {
         text.text,
         contentText.text,
         prioritySelect(startDate, today),
-        userData["id"],
+        userData.id,
         formatDate(startDate),
         id
       );
@@ -64,7 +65,9 @@ export const Update = () => {
       {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
       <SInputArea>
         <SIndex>
-          <STitle>{id} Update</STitle>
+          <STitle>
+            {id} {CONSTANT_DATA.display.title}
+          </STitle>
         </SIndex>
         <TodoInputArea
           textPlaceholder={`${location.state.title}`}
@@ -74,9 +77,15 @@ export const Update = () => {
           contentText={contentText.text}
           contentTextOnChange={contentText.textOnChange}
         />
-        <SBackButton onClick={() => history.goBack()}>戻る</SBackButton>
-        <SDeleteButton onClick={() => onClickDelete()}>削除</SDeleteButton>
-        <SUpdateButton onClick={() => onClickUpdate()}>更新</SUpdateButton>
+        <SBackButton onClick={() => history.goBack()}>
+          {CONSTANT_DATA.display.back}
+        </SBackButton>
+        <SDeleteButton onClick={() => onClickDelete()}>
+          {CONSTANT_DATA.display.delete}
+        </SDeleteButton>
+        <SUpdateButton onClick={() => onClickUpdate()}>
+          {CONSTANT_DATA.display.update}
+        </SUpdateButton>
       </SInputArea>
     </SWrapper>
   );
