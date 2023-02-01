@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { getChartData } from "../api/api";
+import { getTodos } from "../api/api";
 import { groupTodosByDeadline } from "../function/groupTodosByDeadline";
 import { ERROR_MESSAGES } from "../pages/common/constant";
 
@@ -21,7 +21,7 @@ export const useCountTodos = (userData) => {
   // Todoの数を取得
   const countTodos = useCallback(async () => {
     try {
-      const chartData = await getChartData(userData.id);
+      const chartData = await getTodos(userData.id);
       const separatedChartData = groupTodosByDeadline(chartData);
       // 返ってきたTodo数をuseStateで管理
       setAllChartData(separatedChartData.limitTodos);

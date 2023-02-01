@@ -54,19 +54,7 @@ app.get(
 app.get(`/todos/:userId`, async (req, res) => {
   try {
     const sql =
-      "SELECT id, title, content, completion, priority, DATE_FORMAT(deadline, '%m/%d') AS deadline FROM TASK WHERE user_id = ? ORDER BY id ASC";
-    const placeholder = req.params.userId;
-    const results = await executeQuery(sql, placeholder);
-    res.send(results);
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
-
-// Todoの期限と完了フラグを取得
-app.get("/getChartData/:userId", async (req, res) => {
-  try {
-    const sql = "SELECT completion, deadline FROM TASK WHERE user_id = ?";
+      "SELECT id, title, content, completion, priority, deadline FROM TASK WHERE user_id = ? ORDER BY id ASC";
     const placeholder = req.params.userId;
     const results = await executeQuery(sql, placeholder);
     res.send(results);

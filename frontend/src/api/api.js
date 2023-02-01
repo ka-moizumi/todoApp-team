@@ -18,11 +18,6 @@ export const getTodos = async (userId) => {
   return await axios.get(`/todos/${userId}`);
 };
 
-//Todoの日付を取得
-export const getChartData = async (userId) => {
-  return await axios.get(`/getChartData/${userId}`);
-};
-
 // メールアドレスが既に登録済みか確認
 export const getUserCountToEmail = async (email) => {
   return await axios.get(`/getUserCountToEmail`, { params: { email: email } });
