@@ -42,8 +42,7 @@ export const TodoTabArea = (props) => {
                 <SEditButton onClick={() => onClickEdit(todo)}>
                   {CONSTANT_DATA.display.edit}
                 </SEditButton>
-                {completionStatus ===
-                CONSTANT_DATA.display.status.incomplete ? (
+                {completionStatus === CONSTANT_DATA.status.incomplete ? (
                   <SCompleteButton onClick={() => onClickCompleteChange(todo)}>
                     {CONSTANT_DATA.display.complete}
                   </SCompleteButton>

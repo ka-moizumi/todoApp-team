@@ -71,7 +71,7 @@ export const ListTabs = (props) => {
       </TabList>
       <TabPanel>
         <TodoTabArea
-          completionStatus={CONSTANT_DATA.display.status.incomplete}
+          completionStatus={CONSTANT_DATA.status.incomplete}
           todos={todos}
           onClickCompleteChange={onClickCompleteChange}
           onClickEdit={onClickEdit}
@@ -79,7 +79,7 @@ export const ListTabs = (props) => {
       </TabPanel>
       <TabPanel>
         <TodoTabArea
-          completionStatus={CONSTANT_DATA.display.status.complete}
+          completionStatus={CONSTANT_DATA.status.complete}
           todos={todos}
           onClickCompleteChange={onClickCompleteChange}
           onClickEdit={onClickEdit}
