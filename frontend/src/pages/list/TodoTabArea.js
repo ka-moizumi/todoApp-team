@@ -11,7 +11,7 @@ export const TodoTabArea = (props) => {
     return dividedTodos;
   };
 
-  const convertFormatDeadline = (deadline) => {
+  const changeDateFormat = (deadline) => {
     const newDate = new Date(deadline);
     const month = newDate.getMonth() + 1;
     const day = newDate.getDate();
@@ -37,7 +37,7 @@ export const TodoTabArea = (props) => {
               <td>{todo.id}</td>
               <td>{todo.title}</td>
               <td>{todo.content}</td>
-              <td>{convertFormatDeadline(todo.deadline)}</td>
+              <td>{changeDateFormat(todo.deadline)}</td>
               <td>
                 <SEditButton onClick={() => onClickEdit(todo)}>
                   {CONSTANT_DATA.display.edit}
