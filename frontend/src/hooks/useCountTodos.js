@@ -6,14 +6,14 @@ import { ERROR_MESSAGES } from "../pages/common/constant";
 // Todoの数を取得
 export const useCountTodos = (userData) => {
   const [allChartData, setAllChartData] = useState({
-    highPriorityTodos: "",
-    normalPriorityTodos: "",
-    lowPriorityTodos: "",
+    highPriorityTodosCount: "",
+    normalPriorityTodosCount: "",
+    lowPriorityTodosCount: "",
   });
 
   const [todayChartData, setTodayChartData] = useState({
-    completeTodos: "",
-    incompleteTodos: "",
+    completeTodosCount: "",
+    incompleteTodosCount: "",
   });
 
   const [errorMessage, setErrorMessage] = useState();

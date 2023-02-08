@@ -1,7 +1,7 @@
 export const calcAchievementRate = (chartData) => {
   return `${Math.trunc(
-    (chartData.completeTodos /
-      (chartData.completeTodos + chartData.incompleteTodos)) *
+    (chartData.completeTodosCount /
+      (chartData.completeTodosCount + chartData.incompleteTodosCount)) *
       100
   )} %`;
 };

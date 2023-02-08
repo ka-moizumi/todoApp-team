@@ -16,9 +16,9 @@ export const AllChart = (props) => {
       {
         label: "# of Votes",
         data: [
-          props.data.highPriorityTodos,
-          props.data.normalPriorityTodos,
-          props.data.lowPriorityTodos,
+          props.data.highPriorityTodosCount,
+          props.data.normalPriorityTodosCount,
+          props.data.lowPriorityTodosCount,
         ],
         backgroundColor: [
           CONSTANT_DATA.color.red,

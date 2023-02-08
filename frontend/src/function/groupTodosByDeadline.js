@@ -5,14 +5,14 @@ export const groupTodosByDeadline = (req) => {
 
   //分けたTodo数を配列にする
   const limitTodos = {
-    highPriorityTodos: getHighPriorityTodos(getData, today).length,
-    normalPriorityTodos: getNormalPriorityTodos(getData, today).length,
-    lowPriorityTodos: getLowPriorityTodos(getData, today).length,
+    highPriorityTodosCount: getHighPriorityTodos(getData, today).length,
+    normalPriorityTodosCount: getNormalPriorityTodos(getData, today).length,
+    lowPriorityTodosCount: getLowPriorityTodos(getData, today).length,
   };
 
   const countCompleteTodos = {
-    completeTodos: getCompleteTodos(getData, today).length,
-    incompleteTodos: getInCompleteTodos(getData, today).length,
+    completeTodosCount: getCompleteTodos(getData, today).length,
+    incompleteTodosCount: getInCompleteTodos(getData, today).length,
   };
   return { limitTodos, countCompleteTodos };
 };
