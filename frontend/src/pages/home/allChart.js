@@ -8,9 +8,9 @@ ChartJS.register(ArcElement, Tooltip, Legend, Title);
 export const AllChart = (props) => {
   const chartData = {
     labels: [
-      CONSTANT_DATA.allLabel.today,
-      CONSTANT_DATA.allLabel.threeDays,
-      CONSTANT_DATA.allLabel.other,
+      CONSTANT_DATA.display.allLabel.today,
+      CONSTANT_DATA.display.allLabel.threeDays,
+      CONSTANT_DATA.display.allLabel.other,
     ],
     datasets: [
       {
@@ -45,9 +45,9 @@ export const AllChart = (props) => {
       title: {
         display: true,
         font: {
-          size: CONSTANT_DATA.title.size,
+          size: CONSTANT_DATA.titleSize,
         },
-        text: CONSTANT_DATA.title.text.allTodos,
+        text: CONSTANT_DATA.display.allChartTitle,
       },
     },
   };

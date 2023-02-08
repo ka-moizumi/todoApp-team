@@ -6,6 +6,7 @@ import { TodayChart } from "./todayChart";
 import { SErrorMessage } from "../login/Login";
 import { calcAchievementRate } from "../../function/calcAchievementRate";
 import { useCountTodos } from "../../hooks/useCountTodos";
+import { CONSTANT_DATA } from "./constant";
 
 export const Home = () => {
   const userData = useMemo(() => {
@@ -19,23 +20,28 @@ export const Home = () => {
     <SWrapper width={"600px"}>
       {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
       <SChartWapper>
-        {allChartData.highPriorityTodosCount === 0 &&
-        allChartData.normalPriorityTodosCount === 0 &&
-        allChartData.lowPriorityTodosCount === 0 ? (
+        {allChartData.highPriorityTodosCount === CONSTANT_DATA.noneTodosCount &&
+        allChartData.normalPriorityTodosCount ===
+          CONSTANT_DATA.noneTodosCount &&
+        allChartData.lowPriorityTodosCount === CONSTANT_DATA.noneTodosCount ? (
           <>
-            <SChartTitle>全てのTodo</SChartTitle>
-            <SNoneChartmessage>なし</SNoneChartmessage>
+            <SChartTitle>{CONSTANT_DATA.display.allChartTitle}</SChartTitle>
+            <SNoneChartmessage>
+              {CONSTANT_DATA.display.noneChartMessage}
+            </SNoneChartmessage>
           </>
         ) : (
           <AllChart data={allChartData} />
         )}
       </SChartWapper>
       <SChartWapper>
-        {todayChartData.incompleteTodosCount === 0 &&
-        todayChartData.completeTodosCount === 0 ? (
+        {todayChartData.incompleteTodosCount === CONSTANT_DATA.noneTodosCount &&
+        todayChartData.completeTodosCount === CONSTANT_DATA.noneTodosCount ? (
           <>
-            <SChartTitle>今日のTodo</SChartTitle>
-            <SNoneChartmessage>なし</SNoneChartmessage>
+            <SChartTitle>{CONSTANT_DATA.display.todayChartTitle}</SChartTitle>
+            <SNoneChartmessage>
+              {CONSTANT_DATA.display.noneChartMessage}
+            </SNoneChartmessage>
           </>
         ) : (
           <>

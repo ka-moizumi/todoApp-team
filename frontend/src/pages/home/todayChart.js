@@ -8,8 +8,8 @@ ChartJS.register(ArcElement, Tooltip, Legend, Title);
 export const TodayChart = (props) => {
   const chartData = {
     labels: [
-      CONSTANT_DATA.todaylabel.complete,
-      CONSTANT_DATA.todaylabel.incomplete,
+      CONSTANT_DATA.display.todaylabel.complete,
+      CONSTANT_DATA.display.todaylabel.incomplete,
     ],
     datasets: [
       {
@@ -35,9 +35,9 @@ export const TodayChart = (props) => {
       title: {
         display: true,
         font: {
-          size: CONSTANT_DATA.title.size,
+          size: CONSTANT_DATA.titleSize,
         },
-        text: CONSTANT_DATA.title.text.todayTodo,
+        text: CONSTANT_DATA.display.todayChartTitle,
       },
     },
   };
