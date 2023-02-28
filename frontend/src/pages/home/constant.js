@@ -19,5 +19,5 @@ export const CONSTANT_DATA = {
   borderWidth: 2,
   legendPosition: "top",
   titleSize: "24",
-  noneTodosCount: 0,
+  zeroCount: 0,
 };

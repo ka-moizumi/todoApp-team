@@ -20,7 +20,6 @@ export const Create = () => {
   const { today, startDate, setStartDate } = useContext(TextContext);
 
   const [errorMessage, setErrorMessage] = useState();
-
   const userData = JSON.parse(sessionStorage.getItem("userData"));
 
   const onClickAdd = async () => {
