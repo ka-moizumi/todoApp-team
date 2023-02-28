@@ -34,7 +34,7 @@ export const Create = () => {
       );
       history.push(`/list/${userData.id}`);
     } catch (err) {
-      setErrorMessage(ERROR_MESSAGES.registerTodo(err.response.status));
+      setErrorMessage(ERROR_MESSAGES.registerTodo);
     }
   };
 

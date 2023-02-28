@@ -28,7 +28,7 @@ export const useCountTodos = (userData) => {
       setAllChartData(separatedChartData.limitTodos);
       setTodayChartData(separatedChartData.countCompleteTodos);
     } catch (err) {
-      setErrorMessage(ERROR_MESSAGES.displayChart(err.response.status));
+      setErrorMessage(ERROR_MESSAGES.displayChart);
     }
   }, [userData]);
 

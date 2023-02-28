@@ -20,7 +20,7 @@ export const List = () => {
       const result = await getTodos(userData.id);
       setTodos(result.data);
     } catch (err) {
-      setErrorMessage(ERROR_MESSAGES.getTodos(err.response.status));
+      setErrorMessage(ERROR_MESSAGES.getTodos);
     }
   };
 
@@ -29,7 +29,7 @@ export const List = () => {
       await clearTodos(userData.id);
       resTodos();
     } catch (err) {
-      setErrorMessage(ERROR_MESSAGES.deleteTodos(err.response.status));
+      setErrorMessage(ERROR_MESSAGES.deleteTodos);
     }
   };
 
@@ -50,7 +50,7 @@ export const List = () => {
       await completionChange(!todo.completion, todo.id);
       resTodos();
     } catch (err) {
-      setErrorMessage(ERROR_MESSAGES.changeStatus(err.response.status));
+      setErrorMessage(ERROR_MESSAGES.changeStatus);
     }
   };
 
