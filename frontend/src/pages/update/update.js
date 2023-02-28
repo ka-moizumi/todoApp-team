@@ -61,7 +61,7 @@ export const Update = () => {
 
   return (
     <SWrapper>
-      <h1>Todo更新</h1>
+      <h1>{CONSTANT_DATA.display.header}</h1>
       {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
       <SInputArea>
         <SIndex>

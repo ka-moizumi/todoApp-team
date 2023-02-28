@@ -1,5 +1,6 @@
 export const CONSTANT_DATA = {
   display: {
+    header: "Todoリスト一覧",
     title: "List",
     incomplete: "未完了",
     complete: "完了",

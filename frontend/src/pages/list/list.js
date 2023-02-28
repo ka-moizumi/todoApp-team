@@ -61,7 +61,7 @@ export const List = () => {
 
   return (
     <SWrapper>
-      <h1>Todoリスト一覧</h1>
+      <h1>{CONSTANT_DATA.display.header}</h1>
       {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
       <STodosArea>
         <SIndex>

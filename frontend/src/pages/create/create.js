@@ -45,7 +45,7 @@ export const Create = () => {
 
   return (
     <SWrapper>
-      <h1>Todo新規作成</h1>
+      <h1>{CONSTANT_DATA.display.header}</h1>
       {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
       <SInputArea>
         <SIndex>
