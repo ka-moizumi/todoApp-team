@@ -20,10 +20,9 @@ export const Home = () => {
     <SWrapper width={"600px"}>
       {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
       <SChartWapper>
-        {allChartData.highPriorityTodosCount === CONSTANT_DATA.noneTodosCount &&
-        allChartData.normalPriorityTodosCount ===
-          CONSTANT_DATA.noneTodosCount &&
-        allChartData.lowPriorityTodosCount === CONSTANT_DATA.noneTodosCount ? (
+        {allChartData.highPriorityTodosCount === CONSTANT_DATA.zeroCount &&
+        allChartData.normalPriorityTodosCount === CONSTANT_DATA.zeroCount &&
+        allChartData.lowPriorityTodosCount === CONSTANT_DATA.zeroCount ? (
           <>
             <SChartTitle>{CONSTANT_DATA.display.allChartTitle}</SChartTitle>
             <SNoneChartmessage>
@@ -35,8 +34,8 @@ export const Home = () => {
         )}
       </SChartWapper>
       <SChartWapper>
-        {todayChartData.incompleteTodosCount === CONSTANT_DATA.noneTodosCount &&
-        todayChartData.completeTodosCount === CONSTANT_DATA.noneTodosCount ? (
+        {todayChartData.incompleteTodosCount === CONSTANT_DATA.zeroCount &&
+        todayChartData.completeTodosCount === CONSTANT_DATA.zeroCount ? (
           <>
             <SChartTitle>{CONSTANT_DATA.display.todayChartTitle}</SChartTitle>
             <SNoneChartmessage>

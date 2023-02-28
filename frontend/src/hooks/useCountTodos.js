@@ -7,14 +7,14 @@ import { CONSTANT_DATA } from "../pages/home/constant";
 // Todoの数を取得
 export const useCountTodos = (userData) => {
   const [allChartData, setAllChartData] = useState({
-    highPriorityTodosCount: CONSTANT_DATA.noneTodosCount,
-    normalPriorityTodosCount: CONSTANT_DATA.noneTodosCount,
-    lowPriorityTodosCount: CONSTANT_DATA.noneTodosCount,
+    highPriorityTodosCount: CONSTANT_DATA.zeroCount,
+    normalPriorityTodosCount: CONSTANT_DATA.zeroCount,
+    lowPriorityTodosCount: CONSTANT_DATA.zeroCount,
   });
 
   const [todayChartData, setTodayChartData] = useState({
-    completeTodosCount: CONSTANT_DATA.noneTodosCount,
-    incompleteTodosCount: CONSTANT_DATA.noneTodosCount,
+    completeTodosCount: CONSTANT_DATA.zeroCount,
+    incompleteTodosCount: CONSTANT_DATA.zeroCount,
   });
 
   const [errorMessage, setErrorMessage] = useState();
