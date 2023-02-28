@@ -47,8 +47,7 @@ export const SignUp = () => {
         name: resultUser.data[0].user_name,
       };
       history.push("/");
-      sessionStorage.setItem("userData", JSON.stringify(userData));
-      login();
+      login(userData);
     } catch (err) {
       if (err.response.data.errors !== undefined) {
         setErrorMessage(err.response.data.errors[0].msg);

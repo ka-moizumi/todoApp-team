@@ -9,11 +9,13 @@ export const TextProvider = (props) => {
 
   const [isAuth, setIsAuth] = useState(false);
 
-  const login = () => {
+  const login = (userData) => {
+    sessionStorage.setItem("userData", JSON.stringify(userData));
     setIsAuth(true);
   };
 
   const logOut = () => {
+    sessionStorage.clear();
     setIsAuth(false);
   };
 

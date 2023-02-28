@@ -35,8 +35,7 @@ export const Login = () => {
           id: result.data[0].id,
           name: result.data[0].user_name,
         };
-        sessionStorage.setItem("userData", JSON.stringify(userData));
-        login();
+        login(userData);
       } else {
         setErrorMessage("入力内容に誤りがあります。");
         setTimeout(() => {
