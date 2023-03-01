@@ -18,8 +18,8 @@ export const Update = () => {
   const history = useHistory();
   const location = useLocation();
 
-  const text = useInput();
-  const contentText = useInput();
+  const [content, contentOnChange] = useInput();
+  const [detail, detailOnChange] = useInput();
 
   const { id } = useParams();
 
@@ -30,10 +30,10 @@ export const Update = () => {
 
   const onClickUpdate = async () => {
     try {
-      if (text.text === "" || contentText.text === "") return;
+      if (content === "" || detail === "") return;
       await editTodo(
-        text.text,
-        contentText.text,
+        content,
+        detail,
         prioritySelect(startDate, today),
         userData.id,
         formatDate(startDate),
@@ -70,12 +70,12 @@ export const Update = () => {
           </STitle>
         </SIndex>
         <TodoInputArea
-          textPlaceholder={`${location.state.title}`}
-          text={text.text}
-          textOnChange={text.textOnChange}
-          contentTextPlaceholder={`${location.state.content}`}
-          contentText={contentText.text}
-          contentTextOnChange={contentText.textOnChange}
+          contentPlaceholder={`${location.state.title}`}
+          content={content}
+          contentOnChange={contentOnChange}
+          detailPlaceholder={`${location.state.content}`}
+          detail={detail}
+          detailOnChange={detailOnChange}
         />
         <SBackButton onClick={() => history.goBack()}>
           {CONSTANT_DATA.display.back}

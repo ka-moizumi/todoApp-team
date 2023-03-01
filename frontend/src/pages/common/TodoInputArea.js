@@ -5,12 +5,12 @@ import { Datepick } from "./datepick";
 
 export const TodoInputArea = (props) => {
   const {
-    textPlaceholder,
-    contentTextPlaceholder,
-    text,
-    contentText,
-    textOnChange,
-    contentTextOnChange,
+    contentPlaceholder,
+    detailPlaceholder,
+    content,
+    detail,
+    contentOnChange,
+    detailOnChange,
   } = props;
 
   const { today, startDate, setStartDate } = useContext(TextContext);
@@ -20,19 +20,19 @@ export const TodoInputArea = (props) => {
       <SInput>
         <SInputTitile>内容</SInputTitile>
         <SInputText
-          placeholder={textPlaceholder}
+          placeholder={contentPlaceholder}
           name="title"
-          value={text}
-          onChange={textOnChange}
+          value={content}
+          onChange={contentOnChange}
         />
       </SInput>
       <SInput>
         <SInputTitile>詳細</SInputTitile>
         <SInputText
-          placeholder={contentTextPlaceholder}
+          placeholder={detailPlaceholder}
           name="content"
-          value={contentText}
-          onChange={contentTextOnChange}
+          value={detail}
+          onChange={detailOnChange}
         />
       </SInput>
       <SInput>

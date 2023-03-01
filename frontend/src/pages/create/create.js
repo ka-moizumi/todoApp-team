@@ -14,8 +14,8 @@ import { CONSTANT_DATA } from "./constant";
 export const Create = () => {
   const history = useHistory();
 
-  const text = useInput();
-  const contentText = useInput();
+  const [content, contentOnChange] = useInput();
+  const [detail, detailOnChange] = useInput();
 
   const { today, startDate, setStartDate } = useContext(TextContext);
 
@@ -24,10 +24,10 @@ export const Create = () => {
 
   const onClickAdd = async () => {
     try {
-      if (text.text === "" || contentText.text === "") return;
+      if (content === "" || detail === "") return;
       await addTodo(
-        text.text,
-        contentText.text,
+        content,
+        detail,
         prioritySelect(startDate, today),
         userData.id,
         formatDate(startDate)
@@ -55,12 +55,12 @@ export const Create = () => {
           </SAddButton>
         </SIndex>
         <TodoInputArea
-          textPlaceholder={CONSTANT_DATA.display.content}
-          text={text.text}
-          textOnChange={text.textOnChange}
-          contentTextPlaceholder={CONSTANT_DATA.display.detail}
-          contentText={contentText.text}
-          contentTextOnChange={contentText.textOnChange}
+          contentPlaceholder={CONSTANT_DATA.display.content}
+          content={content}
+          contentOnChange={contentOnChange}
+          detailPlaceholder={CONSTANT_DATA.display.detail}
+          detailt={detail}
+          detailOnChange={detailOnChange}
         />
       </SInputArea>
     </SWrapper>
