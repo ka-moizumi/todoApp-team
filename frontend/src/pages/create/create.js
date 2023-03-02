@@ -1,42 +1,24 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
 import styled from "styled-components";
-import { addTodo } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
-import { formatDate } from "../../function/formatDate";
-import { prioritySelect } from "../../function/prioritySelect";
 import { TodoInputArea } from "../common/TodoInputArea";
 import { useInput } from "../../hooks/useInput";
 import { SErrorMessage } from "../login/Login";
-import { ERROR_MESSAGES } from "../common/constant";
 import { CONSTANT_DATA } from "./constant";
+import { useAddTodo } from "../../hooks/useAddTodo";
 
 export const Create = () => {
-  const history = useHistory();
+  const { today, startDate, setStartDate } = useContext(TextContext);
 
   const [content, contentOnChange] = useInput();
   const [detail, detailOnChange] = useInput();
 
-  const { today, startDate, setStartDate } = useContext(TextContext);
-
-  const [errorMessage, setErrorMessage] = useState();
-  const userData = JSON.parse(sessionStorage.getItem("userData"));
-
-  const onClickAdd = async () => {
-    try {
-      if (content === "" || detail === "") return;
-      await addTodo(
-        content,
-        detail,
-        prioritySelect(startDate, today),
-        userData.id,
-        formatDate(startDate)
-      );
-      history.push(`/list/${userData.id}`);
-    } catch (err) {
-      setErrorMessage(ERROR_MESSAGES.registerTodo);
-    }
-  };
+  const [onClickAdd, errorMessage] = useAddTodo(
+    content,
+    detail,
+    startDate,
+    today
+  );
 
   useEffect(() => {
     setStartDate(today);

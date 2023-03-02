@@ -1,58 +1,35 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { deleteTodo, editTodo } from "../../api/api";
 import { TextContext } from "../../providers/textProvider";
 import { SIndex, SInputArea, STitle, SWrapper } from "../create/create";
 import { SDeleteButton } from "../list/list";
-import { formatDate } from "../../function/formatDate";
-import { prioritySelect } from "../../function/prioritySelect";
 import { TodoInputArea } from "../common/TodoInputArea";
 import { useInput } from "../../hooks/useInput";
 import { SPrimaryButton } from "../list/TodoTabArea";
 import { SErrorMessage } from "../login/Login";
-import { ERROR_MESSAGES } from "../common/constant";
 import { CONSTANT_DATA } from "./constant";
+import { useUpdateTodo } from "../../hooks/useUpdateTodo";
+import { useDeleteTodo } from "../../hooks/useDeleteTodo";
 
 export const Update = () => {
   const history = useHistory();
   const location = useLocation();
+  const { today, startDate, setStartDate } = useContext(TextContext);
+  const { id } = useParams();
 
   const [content, contentOnChange] = useInput();
   const [detail, detailOnChange] = useInput();
 
-  const { id } = useParams();
+  const [onClickUpdate, updateErrorMessage] = useUpdateTodo(
+    content,
+    detail,
+    startDate,
+    today,
+    id
+  );
 
-  const { today, startDate, setStartDate } = useContext(TextContext);
-
-  const [errorMessage, setErrorMessage] = useState();
-  const userData = JSON.parse(sessionStorage.getItem("userData"));
-
-  const onClickUpdate = async () => {
-    try {
-      if (content === "" || detail === "") return;
-      await editTodo(
-        content,
-        detail,
-        prioritySelect(startDate, today),
-        userData.id,
-        formatDate(startDate),
-        id
-      );
-      history.goBack();
-    } catch (err) {
-      setErrorMessage(ERROR_MESSAGES.updateTodo(err.response.status));
-    }
-  };
-
-  const onClickDelete = async () => {
-    try {
-      await deleteTodo(id);
-      history.goBack();
-    } catch (err) {
-      setErrorMessage(ERROR_MESSAGES.deleteTodos(err.response.status));
-    }
-  };
+  const [onClickDelete, deleteErrorMessage] = useDeleteTodo(id);
 
   useEffect(() => {
     setStartDate(today);
@@ -62,7 +39,12 @@ export const Update = () => {
   return (
     <SWrapper>
       <h1>{CONSTANT_DATA.display.header}</h1>
-      {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
+      {updateErrorMessage && (
+        <SErrorMessage>{updateErrorMessage}</SErrorMessage>
+      )}
+      {deleteErrorMessage && (
+        <SErrorMessage>{deleteErrorMessage}</SErrorMessage>
+      )}
       <SInputArea>
         <SIndex>
           <STitle>
