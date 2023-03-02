@@ -1,26 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { getTodos, clearTodos } from "../../api/api";
+import { getTodos, clearTodos, completionChange } from "../../api/api";
+import { ERROR_MESSAGES } from "../common/constant";
 import { SIndex, STitle, SWrapper } from "../create/create";
+import { SErrorMessage } from "../login/Login";
+import { CONSTANT_DATA } from "./constant";
+import { ListTabs } from "./listTabs";
 
 export const List = () => {
   const history = useHistory();
   const [todos, setTodos] = useState([]);
+  const [errorMessage, setErrorMessage] = useState();
 
-  const resTodos = () => {
-    getTodos().then((res) => {
-      setTodos(res.data);
-    });
+  const userData = JSON.parse(sessionStorage.getItem("userData"));
+
+  const resTodos = async () => {
+    try {
+      const result = await getTodos(userData.id);
+      setTodos(result.data);
+    } catch (err) {
+      setErrorMessage(ERROR_MESSAGES.getTodos);
+    }
   };
 
-  useEffect(() => {
-    resTodos();
-  }, []);
-
   const onClickClear = async () => {
-    await clearTodos();
-    resTodos();
+    try {
+      await clearTodos(userData.id);
+      resTodos();
+    } catch (err) {
+      setErrorMessage(ERROR_MESSAGES.deleteTodos);
+    }
   };
 
   const onClickEdit = (todo) => {
@@ -30,46 +40,42 @@ export const List = () => {
         title: todo.title,
         content: todo.content,
         priprity: todo.priority,
+        deadline: todo.deadline,
       },
     });
   };
 
+  const onClickCompleteChange = async (todo) => {
+    try {
+      await completionChange(!todo.completion, todo.id);
+      resTodos();
+    } catch (err) {
+      setErrorMessage(ERROR_MESSAGES.changeStatus);
+    }
+  };
+
+  useEffect(() => {
+    resTodos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <SWrapper>
-      <h1>Todoリスト一覧</h1>
+      <h1>{CONSTANT_DATA.display.header}</h1>
+      {errorMessage && <SErrorMessage>{errorMessage}</SErrorMessage>}
       <STodosArea>
         <SIndex>
-          <STitle>List</STitle>
-          <SDeleteButton onClick={onClickClear}>全件削除</SDeleteButton>
+          <STitle>{CONSTANT_DATA.display.title}</STitle>
+          <SDeleteButton onClick={onClickClear}>
+            {CONSTANT_DATA.display.clear}
+          </SDeleteButton>
         </SIndex>
-        <STodos>
-          <thead>
-            <SHeaderTr>
-              <SIdTh>id</SIdTh>
-              <STitleTh>タイトル</STitleTh>
-              <SContentTh>内容</SContentTh>
-              <SPriorityTh>優先度</SPriorityTh>
-              <SAdminTh>管理</SAdminTh>
-            </SHeaderTr>
-          </thead>
-          <tbody>
-            {todos.map((todo) => {
-              return (
-                <STodo key={todo.id}>
-                  <td>{todo.id}</td>
-                  <td>{todo.title}</td>
-                  <td>{todo.content}</td>
-                  <td>{todo.priority}</td>
-                  <td>
-                    <SEditButton onClick={() => onClickEdit(todo)}>
-                      編集
-                    </SEditButton>
-                  </td>
-                </STodo>
-              );
-            })}
-          </tbody>
-        </STodos>
+        <ListTabs
+          todos={todos}
+          onClickCompleteChange={onClickCompleteChange}
+          onClickEdit={onClickEdit}
+          setTodos={setTodos}
+        />
       </STodosArea>
     </SWrapper>
   );
@@ -85,21 +91,7 @@ const STodosArea = styled.div`
   border-radius: 8px;
 `;
 
-const STodos = styled.table`
-  text-align: left;
-  width: 100%;
-  margin: 20px 0 10px 0;
-  border-collapse: collapse;
-`;
-
-const STodo = styled.tr`
-  margin-top: 30px;
-  :nth-child(even) {
-    background-color: #bccddb;
-  }
-`;
-
-export const SPrimaryButton = styled.button`
+const SPrimaryButton = styled.button`
   margin: 5px 10px;
   padding: 3px 8px;
   border-radius: 8px;
@@ -118,35 +110,4 @@ export const SDeleteButton = styled(SPrimaryButton)`
   &:hover {
     background-color: #e72035;
   }
-`;
-
-const SEditButton = styled(SPrimaryButton)`
-  color: #fcc800;
-  &:hover {
-    background-color: #fcc800;
-  }
-`;
-
-const SHeaderTr = styled.tr`
-  border-bottom: 2px solid #8da0b6;
-`;
-
-const SIdTh = styled.th`
-  width: 5%;
-`;
-
-const STitleTh = styled.th`
-  width: 32%;
-`;
-
-const SContentTh = styled.th`
-  width: 42%;
-`;
-
-const SPriorityTh = styled.th`
-  width: 7%;
-`;
-
-const SAdminTh = styled.th`
-  width: 14%;
 `;

@@ -1,29 +1,68 @@
 import axios from "axios";
 
-export const getTodos = async () => {
-  return await axios.get(`/getTodos`);
+// アカウント作成
+export const signUpInfo = async (userData) => {
+  return await axios.post(`/signUpInfo`, userData);
 };
 
-export const addTodo = async (title, content) => {
+// ユーザ情報を取得
+export const getUserInfo = async (userData) => {
+  const result = await axios.get(`/getUserInfo`, {
+    params: userData,
+  });
+  return result;
+};
+
+// Todoを取得
+export const getTodos = async (userId) => {
+  return await axios.get(`/todos/${userId}`);
+};
+
+// メールアドレスが既に登録済みか確認
+export const getUserCountToEmail = async (email) => {
+  return await axios.get(`/getUserCountToEmail`, { params: { email: email } });
+};
+
+// Todoを追加
+export const addTodo = async (title, content, priority, user_id, deadline) => {
   await axios.post(`/addTodo`, {
     title: title,
     content: content,
-    user_id: "茂泉",
+    priority: priority,
+    user_id: user_id,
+    deadline: deadline,
   });
 };
 
+// Todoを削除
 export const deleteTodo = async (id) => {
-  await axios.post(`/deleteTodo`, { id }).then(() => {});
+  await axios.delete(`/deleteTodo/${id}`);
 };
 
-export const clearTodos = async () => {
-  await axios.post(`/clearTodos`).then(() => {
-    getTodos();
-  });
+// Todoを全削除
+export const clearTodos = async (userId) => {
+  await axios.delete(`/clearTodos/${userId}`);
 };
 
-export const editTodo = async (title, content, id) => {
-  await axios.post(`/editTodo`, { title, content, id }).then(() => {
-    console.log({ title, content, id });
+// 完了・未完了のステータス切り替え
+export const completionChange = async (completion, id) => {
+  await axios.patch(`/completionChange`, { completion, id });
+};
+
+// Todoを更新
+export const editTodo = async (
+  title,
+  content,
+  priority,
+  user_id,
+  deadline,
+  id
+) => {
+  await axios.put(`/editTodo/${id}`, {
+    title,
+    content,
+    priority,
+    user_id,
+    deadline,
   });
 };

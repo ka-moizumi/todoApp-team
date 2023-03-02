@@ -1,87 +1,80 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { deleteTodo, editTodo } from "../../api/api";
-import {
-  SIndex,
-  SInput,
-  SInputArea,
-  SInputItems,
-  SInputText,
-  SInputTitile,
-  SPriority,
-  STitle,
-  SWrapper,
-} from "../create/create";
-import { SDeleteButton, SPrimaryButton } from "../list/list";
+import { TextContext } from "../../providers/textProvider";
+import { SIndex, SInputArea, STitle, SWrapper } from "../create/create";
+import { SDeleteButton } from "../list/list";
+import { TodoInputArea } from "../common/TodoInputArea";
+import { useInput } from "../../hooks/useInput";
+import { SPrimaryButton } from "../list/TodoTabArea";
+import { SErrorMessage } from "../login/Login";
+import { CONSTANT_DATA } from "./constant";
+import { useUpdateTodo } from "../../hooks/useUpdateTodo";
+import { useDeleteTodo } from "../../hooks/useDeleteTodo";
 
 export const Update = () => {
   const history = useHistory();
   const location = useLocation();
+  const { today, startDate, setStartDate } = useContext(TextContext);
   const { id } = useParams();
 
-  const [text, setText] = useState("");
-  const [contentText, setContentText] = useState("");
+  const [content, contentOnChange] = useInput();
+  const [detail, detailOnChange] = useInput();
 
-  const onTitleChange = (e) => setText(e.target.value);
-  const onContentChange = (e) => setContentText(e.target.value);
+  const [onClickUpdate, updateErrorMessage] = useUpdateTodo(
+    content,
+    detail,
+    startDate,
+    today,
+    id
+  );
 
-  const onClickUpdate = async () => {
-    if (text === "" || contentText === "") return;
-    await editTodo(text, contentText, id);
-    history.goBack();
-  };
+  const [onClickDelete, deleteErrorMessage] = useDeleteTodo(id);
 
-  const onClickDelete = async () => {
-    await deleteTodo(id);
-    history.goBack();
-  };
+  useEffect(() => {
+    setStartDate(today);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <SWrapper>
-      <h1>Todo更新</h1>
+      <h1>{CONSTANT_DATA.display.header}</h1>
+      {updateErrorMessage && (
+        <SErrorMessage>{updateErrorMessage}</SErrorMessage>
+      )}
+      {deleteErrorMessage && (
+        <SErrorMessage>{deleteErrorMessage}</SErrorMessage>
+      )}
       <SInputArea>
         <SIndex>
-          <STitle>{id} Update</STitle>
+          <STitle>
+            {id} {CONSTANT_DATA.display.title}
+          </STitle>
         </SIndex>
-        <SInputItems>
-          <SInput>
-            <SInputTitile>title</SInputTitile>
-            <SInputText
-              placeholder={`${location.state.title}`}
-              name="title"
-              value={text}
-              onChange={onTitleChange}
-            />
-          </SInput>
-          <SInput>
-            <SInputTitile>content</SInputTitile>
-            <SInputText
-              placeholder={`${location.state.content}`}
-              name="content"
-              value={contentText}
-              onChange={onContentChange}
-            />
-          </SInput>
-          <SInput>
-            <SInputTitile>priority</SInputTitile>
-            <SPriority name="priority">
-              <option value="1">高</option>
-              <option value="2">中</option>
-              <option value="3">低</option>
-            </SPriority>
-          </SInput>
-        </SInputItems>
-        <SBackButton onClick={() => history.goBack()}>戻る</SBackButton>
-        <SDeleteButton onClick={() => onClickDelete()}>削除</SDeleteButton>
-        <SUpdateButton onClick={() => onClickUpdate()}>更新</SUpdateButton>
+        <TodoInputArea
+          contentPlaceholder={`${location.state.title}`}
+          content={content}
+          contentOnChange={contentOnChange}
+          detailPlaceholder={`${location.state.content}`}
+          detail={detail}
+          detailOnChange={detailOnChange}
+        />
+        <SBackButton onClick={() => history.goBack()}>
+          {CONSTANT_DATA.display.back}
+        </SBackButton>
+        <SDeleteButton onClick={() => onClickDelete()}>
+          {CONSTANT_DATA.display.delete}
+        </SDeleteButton>
+        <SUpdateButton onClick={() => onClickUpdate()}>
+          {CONSTANT_DATA.display.update}
+        </SUpdateButton>
       </SInputArea>
     </SWrapper>
   );
 };
 
 const SBackButton = styled(SPrimaryButton)`
-  margin-right: 70%;
+  margin-right: 60%;
 `;
 
 const SUpdateButton = styled(SPrimaryButton)`
