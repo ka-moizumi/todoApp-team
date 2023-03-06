@@ -1,7 +1,5 @@
 # todoApp-team
 
-# test
-
 ## ローカル環境構築手順
 
 1. /backend ディレクトリへ移動
