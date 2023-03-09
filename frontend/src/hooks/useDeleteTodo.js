@@ -1,20 +1,18 @@
 import { useCallback, useState } from "react";
-import { useHistory } from "react-router-dom";
 import { deleteTodo } from "../api/api";
 import { ERROR_MESSAGES } from "../pages/common/constant";
 
 export const useDeleteTodo = (id) => {
-  const [deleteErrorMessage, setErrorMessage] = useState();
-  const history = useHistory();
+  const [errorMessage, setErrorMessage] = useState();
 
   const onClickDelete = useCallback(async () => {
     try {
       await deleteTodo(id);
-      history.goBack();
     } catch (err) {
       setErrorMessage(ERROR_MESSAGES.deleteTodos);
+      throw new Error();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
-  return [onClickDelete, deleteErrorMessage];
+  return [onClickDelete, errorMessage, setErrorMessage];
 };

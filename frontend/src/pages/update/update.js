@@ -18,18 +18,39 @@ export const Update = () => {
   const { today, startDate, setStartDate } = useContext(TextContext);
   const { id } = useParams();
 
+  const userData = JSON.parse(sessionStorage.getItem("userData"));
+
   const [content, contentOnChange] = useInput();
   const [detail, detailOnChange] = useInput();
 
-  const [onClickUpdate, updateErrorMessage] = useUpdateTodo(
-    content,
-    detail,
-    startDate,
-    today,
-    id
-  );
+  const [onClickDelete, deleteErrorMessage, setDeleteErrorMessage] =
+    useDeleteTodo(id);
 
-  const [onClickDelete, deleteErrorMessage] = useDeleteTodo(id);
+  const [onClickUpdate, updateErrorMessage, setUpdateErrorMessage] =
+    useUpdateTodo(content, detail, startDate, today, id);
+
+  const transitionAfterDelete = async () => {
+    try {
+      await onClickDelete();
+      history.goBack();
+    } catch (err) {
+      setTimeout(() => {
+        setDeleteErrorMessage();
+      }, 3000);
+    }
+  };
+
+  const transitionAfterUpdate = async () => {
+    try {
+      if (content === "" || detail === "") return;
+      await onClickUpdate(userData);
+      history.push(`/list/${userData.id}`);
+    } catch (err) {
+      setTimeout(() => {
+        setUpdateErrorMessage();
+      }, 3000);
+    }
+  };
 
   useEffect(() => {
     setStartDate(today);
@@ -59,13 +80,13 @@ export const Update = () => {
           detail={detail}
           detailOnChange={detailOnChange}
         />
-        <SBackButton onClick={() => history.goBack()}>
+        <SBackButton onClick={history.goBack}>
           {CONSTANT_DATA.display.back}
         </SBackButton>
-        <SDeleteButton onClick={() => onClickDelete()}>
+        <SDeleteButton onClick={transitionAfterDelete}>
           {CONSTANT_DATA.display.delete}
         </SDeleteButton>
-        <SUpdateButton onClick={() => onClickUpdate()}>
+        <SUpdateButton onClick={transitionAfterUpdate}>
           {CONSTANT_DATA.display.update}
         </SUpdateButton>
       </SInputArea>

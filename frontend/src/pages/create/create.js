@@ -6,19 +6,35 @@ import { useInput } from "../../hooks/useInput";
 import { SErrorMessage } from "../login/Login";
 import { CONSTANT_DATA } from "./constant";
 import { useAddTodo } from "../../hooks/useAddTodo";
+import { useHistory } from "react-router-dom";
 
 export const Create = () => {
+  const history = useHistory();
   const { today, startDate, setStartDate } = useContext(TextContext);
 
   const [content, contentOnChange] = useInput();
   const [detail, detailOnChange] = useInput();
 
-  const [onClickAdd, errorMessage] = useAddTodo(
+  const userData = JSON.parse(sessionStorage.getItem("userData"));
+
+  const [onClickAdd, errorMessage, setErrorMessage] = useAddTodo(
     content,
     detail,
     startDate,
     today
   );
+
+  const transitionAfterCreate = async () => {
+    if (content === "" || detail === "") return;
+    try {
+      await onClickAdd(userData);
+      history.push(`/list/${userData.id}`);
+    } catch (err) {
+      setTimeout(() => {
+        setErrorMessage();
+      }, 3000);
+    }
+  };
 
   useEffect(() => {
     setStartDate(today);
@@ -32,7 +48,7 @@ export const Create = () => {
       <SInputArea>
         <SIndex>
           <STitle>{CONSTANT_DATA.display.title}</STitle>
-          <SAddButton onClick={onClickAdd}>
+          <SAddButton onClick={transitionAfterCreate}>
             {CONSTANT_DATA.display.submit}
           </SAddButton>
         </SIndex>
